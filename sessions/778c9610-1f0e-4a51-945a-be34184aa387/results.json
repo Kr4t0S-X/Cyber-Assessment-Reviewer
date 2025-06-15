@@ -1,0 +1,155 @@
+{
+  "results": [
+    {
+      "control_id": "AC-1",
+      "control_name": "Access Control Policy and Procedures",
+      "requirement": "N/A",
+      "supplier_answer": "Access control policies are documented in the \"Information Security Policy\" document, reviewed annually, and available to all employees on the company intranet.",
+      "evidence_validity": "Partially Valid",
+      "compliance_status": "Partially Compliant",
+      "risk_level": "Medium",
+      "key_findings": [
+        "Access control policies are documented but implementation status is unknown"
+      ],
+      "risks": [
+        "Uncontrolled access to sensitive information",
+        "Lack of ongoing monitoring for policy compliance"
+      ],
+      "remediation": [
+        "Verify the current implementation status of AC-1 by conducting an inspection or obtaining feedback from employees.",
+        "Establish a process for monitoring and verifying the ongoing adherence to the Access Control Policy."
+      ],
+      "evidence_references": [],
+      "confidence_score": 0.6
+    },
+    {
+      "control_id": "PR.IP-1",
+      "control_name": "Baseline Configuration",
+      "requirement": "N/A",
+      "supplier_answer": "Baseline configurations exist for servers and employee workstations. However, they have not been updated to reflect the latest OS and application patches. Network device baselines are not yet established.",
+      "evidence_validity": "Partially Valid",
+      "compliance_status": "Non-Compliant",
+      "risk_level": "High",
+      "key_findings": [
+        "Baseline configurations for servers and employee workstations exist but are not up-to-date with latest OS and application patches.",
+        "No baseline configurations have been established for network devices."
+      ],
+      "risks": [
+        "Unpatched systems create vulnerabilities which can be exploited by attackers.",
+        "Lack of proper configuration baselines in network devices may lead to misconfigurations that could result in security breaches."
+      ],
+      "remediation": [
+        "Update baseline configurations to reflect the latest OS and application patches for all servers and workstations.",
+        "Establish baseline configurations for network devices.",
+        "Implement a regular patch management process to ensure timely updates of systems."
+      ],
+      "evidence_references": [],
+      "confidence_score": 0.6
+    },
+    {
+      "control_id": "DE.CM-1",
+      "control_name": "Network Monitoring",
+      "requirement": "N/A",
+      "supplier_answer": "A Security Information and Event Management (SIEM) system is in place, collecting logs from critical systems. Alerts are configured for suspicious activities and monitored 24/7 by the security team.",
+      "evidence_validity": "Partially Valid",
+      "compliance_status": "Partially Compliant",
+      "risk_level": "Medium",
+      "key_findings": [
+        "Evidence provided shows a SIEM system is in place but lacks information on its configuration and monitoring beyond the security team.",
+        "24/7 monitoring of alerts is claimed but no details about escalation procedures or alert thresholds are given."
+      ],
+      "risks": [
+        "Potential delays in incident response due to lack of defined escalation procedures for SIEM alerts",
+        "Lack of visibility into alert thresholds could lead to false negatives or positives, impacting the effectiveness of network monitoring"
+      ],
+      "remediation": [
+        "Define and document escalation procedures for SIEM alerts.",
+        "Establish and maintain appropriate alert thresholds in the SIEM system."
+      ],
+      "evidence_references": [],
+      "confidence_score": 0.6
+    },
+    {
+      "control_id": "RS.RP-1",
+      "control_name": "Response Planning",
+      "requirement": "N/A",
+      "supplier_answer": "The \"Incident Response Plan\" is documented, and tabletop exercises are conducted quarterly to test its effectiveness. The plan includes roles, responsibilities, and communication protocols.",
+      "evidence_validity": "Partially Valid",
+      "compliance_status": "Partially Compliant",
+      "risk_level": "Medium",
+      "key_findings": [
+        "Documented Incident Response Plan but implementation status is not provided.",
+        "Tabletop exercises are conducted quarterly."
+      ],
+      "risks": [
+        "Lack of formal evidence regarding the implemented Incident Response Plan's status.",
+        "Potential miscommunication or misinterpretation during incident response due to lack of regular testing and refinement."
+      ],
+      "remediation": [
+        "Obtain a clear statement regarding the current implementation status of the Incident Response Plan.",
+        "Establish a system for monitoring and documenting the implementation of the plan, including regular reviews and updates based on lessons learned from exercises."
+      ],
+      "evidence_references": [],
+      "confidence_score": 0.6
+    },
+    {
+      "control_id": "RC.RP-1",
+      "control_name": "Recovery Planning",
+      "requirement": "N/A",
+      "supplier_answer": "A disaster recovery plan exists for critical systems, with data backed up to a secondary site. However, the last full recovery test was over a year ago, and the documented Recovery Time Objective (RTO) was not met.",
+      "evidence_validity": "Partially Valid",
+      "compliance_status": "Non-Compliant",
+      "risk_level": "High",
+      "key_findings": [
+        "Last full recovery test was over a year ago.",
+        "Documented Recovery Time Objective (RTO) was not met."
+      ],
+      "risks": [
+        "Data loss or disruption due to unsuccessful disaster recovery.",
+        "Loss of reputation and trust among stakeholders"
+      ],
+      "remediation": [
+        "Conduct regular disaster recovery drills as per the documented Recovery Time Objective (RTO)",
+        "Revise the RTO if necessary based on business requirements",
+        "Implement a monitoring system to track disaster recovery progress and performance."
+      ],
+      "evidence_references": [],
+      "confidence_score": 0.6
+    }
+  ],
+  "risk_metrics": {
+    "overall_risk_score": 52.0,
+    "risk_distribution": {
+      "Critical": 0,
+      "High": 2,
+      "Medium": 3,
+      "Low": 0,
+      "Unknown": 0
+    },
+    "compliance_distribution": {
+      "Compliant": 0,
+      "Partially Compliant": 3,
+      "Non-Compliant": 2
+    },
+    "compliance_percentage": 0.0,
+    "high_priority_controls": [
+      {
+        "control_id": "PR.IP-1",
+        "control_name": "Baseline Configuration",
+        "risk_level": "High",
+        "compliance_status": "Non-Compliant"
+      },
+      {
+        "control_id": "RC.RP-1",
+        "control_name": "Recovery Planning",
+        "risk_level": "High",
+        "compliance_status": "Non-Compliant"
+      }
+    ],
+    "total_controls_assessed": 5
+  },
+  "framework": "ISO27001",
+  "timestamp": "2025-06-15T18:04:50.556235",
+  "total_controls": 5,
+  "analyzed_controls": 5
+}

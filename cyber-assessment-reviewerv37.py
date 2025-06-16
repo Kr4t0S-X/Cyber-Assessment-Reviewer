@@ -158,6 +158,40 @@ import numpy as np
 import requests
 import subprocess
 import time
+import math
+
+# Custom JSON encoder to handle NaN values
+class SafeJSONEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, float):
+            if math.isnan(obj) or math.isinf(obj):
+                return ''  # Convert NaN/Inf to empty string
+        return super().default(obj)
+
+    def encode(self, obj):
+        # Pre-process the object to handle NaN values
+        obj = self._clean_nan_values(obj)
+        return super().encode(obj)
+
+    def _clean_nan_values(self, obj):
+        """Recursively clean NaN values from nested structures"""
+        if isinstance(obj, dict):
+            return {k: self._clean_nan_values(v) for k, v in obj.items()}
+        elif isinstance(obj, list):
+            return [self._clean_nan_values(item) for item in obj]
+        elif isinstance(obj, float) and (math.isnan(obj) or math.isinf(obj)):
+            return ''
+        elif hasattr(obj, 'item') and callable(obj.item):
+            # Handle numpy scalars
+            try:
+                val = obj.item()
+                if isinstance(val, float) and (math.isnan(val) or math.isinf(val)):
+                    return ''
+                return val
+            except:
+                return str(obj)
+        else:
+            return obj
 
 # Optional imports for Transformers mode
 try:
@@ -453,19 +487,22 @@ class CyberAssessmentReviewer:
         sheets_text = {}
         try:
             xlsx_file = pd.ExcelFile(filepath)
-            
+
             for sheet_name in xlsx_file.sheet_names[:5]:  # Limit to first 5 sheets
                 df = pd.read_excel(xlsx_file, sheet_name=sheet_name)
-                
+
+                # Handle NaN values by replacing with empty strings
+                df = df.fillna('')
+
                 # Convert to string representation
                 text_content = f"Sheet: {sheet_name}\n"
-                text_content += f"Columns: {', '.join(df.columns)}\n"
+                text_content += f"Columns: {', '.join(str(col) for col in df.columns)}\n"
                 text_content += f"Rows: {len(df)}\n\n"
-                
+
                 # Add sample data
                 if len(df) > 0:
                     text_content += df.head(10).to_string()
-                    
+
                 sheets_text[sheet_name] = text_content[:2000]
                 
         except Exception as e:
@@ -1583,23 +1620,36 @@ def upload_assessment():
                     if col.lower().strip() in [name.lower() for name in possible_names]:
                         df.rename(columns={col: standard_name}, inplace=True)
                         break
-            
+
+            # Handle NaN values before converting to dict
+            # Replace NaN with empty strings to avoid JSON serialization issues
+            df = df.fillna('')
+
             controls = df.to_dict('records')
             
             # Save controls to session
             with open(session_path / 'controls.json', 'w') as f:
-                json.dump(controls, f)
+                json.dump(controls, f, cls=SafeJSONEncoder)
             
             # Save column info
             session['columns'] = list(df.columns)
             session['framework'] = request.form.get('framework', 'NIST')
             
+            # Clean sample control for JSON serialization
+            sample_control = None
+            if controls:
+                sample_control = controls[0].copy()
+                # Ensure no NaN values in sample
+                for key, value in sample_control.items():
+                    if isinstance(value, float) and (math.isnan(value) or math.isinf(value)):
+                        sample_control[key] = ''
+
             return jsonify({
                 'success': True,
                 'session_id': session_id,
                 'controls_count': len(controls),
                 'columns': list(df.columns),
-                'sample_control': controls[0] if controls else None
+                'sample_control': sample_control
             })
         except Exception as e:
             logger.error(f"Error parsing assessment: {e}")
@@ -1712,7 +1762,7 @@ def analyze():
     }
     
     with open(session_path / 'results.json', 'w') as f:
-        json.dump(analysis_results, f, indent=2)
+        json.dump(analysis_results, f, indent=2, cls=SafeJSONEncoder)
     
     return jsonify({
         'success': True,
@@ -1809,7 +1859,6 @@ def download_report(session_id):
             priority_df.to_excel(writer, sheet_name='High Priority Controls', index=False)
         
         # Format the Excel file
-        workbook = writer.book
         for sheet_name in writer.sheets:
             worksheet = writer.sheets[sheet_name]
             

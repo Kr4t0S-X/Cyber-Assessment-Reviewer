@@ -15,6 +15,12 @@ class Config:
     DEBUG = os.environ.get('DEBUG', 'True').lower() == 'true'
     HOST = os.environ.get('HOST', '0.0.0.0')  # 0.0.0.0 allows access from other devices on network
     PORT = int(os.environ.get('PORT', 5000))
+
+    # WSGI Server Configuration
+    USE_PRODUCTION_SERVER = os.environ.get('USE_PRODUCTION_SERVER', 'True').lower() == 'true'
+    WSGI_WORKERS = int(os.environ.get('WSGI_WORKERS', 4))
+    WSGI_THREADS = int(os.environ.get('WSGI_THREADS', 2))
+    WSGI_TIMEOUT = int(os.environ.get('WSGI_TIMEOUT', 120))
     
     # File Upload Configuration
     UPLOAD_FOLDER = 'uploads'
@@ -113,12 +119,16 @@ class DevelopmentConfig(Config):
     DEBUG = True
     LOG_LEVEL = 'DEBUG'
     HOST = os.environ.get('HOST', 'localhost')  # Use localhost for development by default
+    USE_PRODUCTION_SERVER = os.environ.get('USE_PRODUCTION_SERVER', 'True').lower() == 'true'  # Use production server by default
 
 class ProductionConfig(Config):
     """Production configuration"""
     DEBUG = False
     LOG_LEVEL = 'WARNING'
     SECRET_KEY = os.environ.get('SECRET_KEY')  # Must be set in production
+    USE_PRODUCTION_SERVER = True  # Always use production server in production
+    WSGI_WORKERS = int(os.environ.get('WSGI_WORKERS', 4))
+    WSGI_THREADS = int(os.environ.get('WSGI_THREADS', 4))
     
     @classmethod
     def validate_config(cls):

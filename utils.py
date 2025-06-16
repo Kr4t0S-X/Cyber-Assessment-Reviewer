@@ -256,3 +256,46 @@ def format_file_size(size_bytes: int) -> str:
         return f"{size_bytes / (1024 * 1024):.1f} MB"
     else:
         return f"{size_bytes / (1024 * 1024 * 1024):.1f} GB"
+
+def get_available_wsgi_server():
+    """Detect available WSGI servers and return the best option"""
+    import platform
+
+    # Check for Waitress (cross-platform, good for Windows)
+    try:
+        import waitress
+        return 'waitress'
+    except ImportError:
+        pass
+
+    # Check for Gunicorn (Unix-only, but very robust)
+    if platform.system() != 'Windows':
+        try:
+            import gunicorn
+            return 'gunicorn'
+        except ImportError:
+            pass
+
+    # Fallback to Flask development server
+    return 'flask'
+
+def install_wsgi_server():
+    """Install appropriate WSGI server for the platform"""
+    import platform
+
+    print("🔧 Installing production WSGI server...")
+
+    try:
+        if platform.system() == 'Windows':
+            # Install Waitress for Windows
+            subprocess.check_call([sys.executable, "-m", "pip", "install", "waitress==3.0.0"])
+            print("✅ Installed Waitress (Windows-compatible WSGI server)")
+        else:
+            # Install Gunicorn for Unix-like systems
+            subprocess.check_call([sys.executable, "-m", "pip", "install", "gunicorn==21.2.0"])
+            print("✅ Installed Gunicorn (Unix WSGI server)")
+
+        return True
+    except subprocess.CalledProcessError as e:
+        print(f"❌ Failed to install WSGI server: {e}")
+        return False

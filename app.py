@@ -15,7 +15,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 # Import configuration and utilities
 from config import get_config, Config
-from utils import check_and_install_dependencies, setup_logging
+from utils import check_and_install_dependencies, setup_logging, get_available_wsgi_server, install_wsgi_server
 
 def create_app(config_name: str = None) -> Flask:
     """Application factory function"""
@@ -70,6 +70,123 @@ def register_routes(app: Flask, config: Config, reviewer):
     from routes import create_routes
     create_routes(app, config, reviewer)
 
+def run_with_wsgi_server(app: Flask, config: Config):
+    """Run the application with appropriate WSGI server"""
+
+    if not config.USE_PRODUCTION_SERVER:
+        print("🔧 Using Flask development server (not recommended for production)")
+        app.run(
+            debug=config.DEBUG,
+            host=config.HOST,
+            port=config.PORT,
+            threaded=True,
+            use_reloader=False  # Disable reloader to avoid double initialization
+        )
+        return
+
+    # Detect available WSGI server
+    wsgi_server = get_available_wsgi_server()
+
+    if wsgi_server == 'flask':
+        print("⚠️  No production WSGI server found. Installing...")
+        if install_wsgi_server():
+            wsgi_server = get_available_wsgi_server()
+        else:
+            print("❌ Failed to install WSGI server. Using Flask development server.")
+            app.run(
+                debug=config.DEBUG,
+                host=config.HOST,
+                port=config.PORT,
+                threaded=True
+            )
+            return
+
+    # Run with production WSGI server
+    if wsgi_server == 'waitress':
+        run_with_waitress(app, config)
+    elif wsgi_server == 'gunicorn':
+        run_with_gunicorn(app, config)
+    else:
+        # Fallback to Flask development server
+        print("⚠️  Falling back to Flask development server")
+        app.run(
+            debug=config.DEBUG,
+            host=config.HOST,
+            port=config.PORT,
+            threaded=True
+        )
+
+def run_with_waitress(app: Flask, config: Config):
+    """Run with Waitress WSGI server"""
+    try:
+        from waitress import serve
+        print(f"🚀 Starting Waitress WSGI server...")
+        print(f"   Workers: {config.WSGI_THREADS} threads")
+        print(f"   Timeout: {config.WSGI_TIMEOUT}s")
+
+        serve(
+            app,
+            host=config.HOST,
+            port=config.PORT,
+            threads=config.WSGI_THREADS,
+            connection_limit=1000,
+            cleanup_interval=30,
+            channel_timeout=config.WSGI_TIMEOUT
+        )
+    except ImportError:
+        print("❌ Waitress not available. Install with: pip install waitress")
+        raise
+    except Exception as e:
+        print(f"❌ Waitress server error: {e}")
+        raise
+
+def run_with_gunicorn(app: Flask, config: Config):
+    """Run with Gunicorn WSGI server"""
+    try:
+        import gunicorn.app.base
+
+        class StandaloneApplication(gunicorn.app.base.BaseApplication):
+            def __init__(self, app, options=None):
+                self.options = options or {}
+                self.application = app
+                super().__init__()
+
+            def load_config(self):
+                config = {key: value for key, value in self.options.items()
+                         if key in self.cfg.settings and value is not None}
+                for key, value in config.items():
+                    self.cfg.set(key.lower(), value)
+
+            def load(self):
+                return self.application
+
+        print(f"🚀 Starting Gunicorn WSGI server...")
+        print(f"   Workers: {config.WSGI_WORKERS}")
+        print(f"   Threads: {config.WSGI_THREADS}")
+        print(f"   Timeout: {config.WSGI_TIMEOUT}s")
+
+        options = {
+            'bind': f'{config.HOST}:{config.PORT}',
+            'workers': config.WSGI_WORKERS,
+            'threads': config.WSGI_THREADS,
+            'timeout': config.WSGI_TIMEOUT,
+            'keepalive': 5,
+            'max_requests': 1000,
+            'max_requests_jitter': 100,
+            'worker_class': 'gthread',
+            'worker_connections': 1000,
+            'preload_app': True
+        }
+
+        StandaloneApplication(app, options).run()
+
+    except ImportError:
+        print("❌ Gunicorn not available. Install with: pip install gunicorn")
+        raise
+    except Exception as e:
+        print(f"❌ Gunicorn server error: {e}")
+        raise
+
 def main():
     """Main application function"""
     
@@ -118,14 +235,9 @@ def main():
     print("   • Maximum file size: 50MB")
     print("=" * 60)
     
-    # Start the Flask application
+    # Start the application with appropriate server
     try:
-        app.run(
-            debug=config.DEBUG,
-            host=config.HOST,
-            port=config.PORT,
-            threaded=True
-        )
+        run_with_wsgi_server(app, config)
     except KeyboardInterrupt:
         print("\n\n👋 Shutting down gracefully...")
     except Exception as e:

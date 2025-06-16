@@ -86,12 +86,40 @@ The application will:
 
 ## 🚀 Quick Start
 
-**For the refactored modular version, run:**
+**For development (with production WSGI server):**
 ```bash
 python app.py
 ```
 
-**For the original monolithic version, run:**
+**For production deployment:**
+```bash
+python run_production.py
+```
+
+**For the original monolithic version:**
 ```bash
 python cyber-assessment-reviewerv37.py
+```
+
+## 🏭 Production WSGI Server
+
+The application now uses **production-ready WSGI servers** instead of Flask's development server:
+
+- **Waitress** (Windows/Cross-platform) - Automatically installed and used
+- **Gunicorn** (Linux/Unix) - Used on Unix-like systems
+- **Automatic detection** - Chooses the best server for your platform
+
+### Benefits:
+- ✅ **No more development server warnings**
+- ✅ **Better performance and stability**
+- ✅ **Production-ready out of the box**
+- ✅ **Automatic installation if missing**
+
+### Configuration:
+```bash
+# Environment variables for WSGI server tuning
+export WSGI_WORKERS=4        # Number of worker processes (Gunicorn)
+export WSGI_THREADS=4        # Number of threads per worker
+export WSGI_TIMEOUT=120      # Request timeout in seconds
+export USE_PRODUCTION_SERVER=true  # Force production server (default: true)
 ```

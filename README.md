@@ -123,3 +123,188 @@ export WSGI_THREADS=4        # Number of threads per worker
 export WSGI_TIMEOUT=120      # Request timeout in seconds
 export USE_PRODUCTION_SERVER=true  # Force production server (default: true)
 ```
+
+## 🐳 Docker Deployment
+
+The application is fully containerized with Docker for easy deployment and scaling.
+
+### 🚀 Quick Start with Docker
+
+**1. Build the Docker images:**
+```bash
+chmod +x docker-build.sh
+./docker-build.sh
+```
+
+**2. Deploy with Ollama (Recommended):**
+```bash
+chmod +x docker-deploy.sh
+./docker-deploy.sh --mode ollama
+```
+
+**3. Deploy with Transformers (Standalone):**
+```bash
+./docker-deploy.sh --mode transformers
+```
+
+### 📦 Docker Images
+
+The project provides two optimized Docker images:
+
+- **`cyber-assessment-reviewer:latest`** - Production image with Ollama support (smaller, faster)
+- **`cyber-assessment-reviewer:transformers`** - Full image with Transformers support (larger, self-contained)
+
+### 🔧 Docker Compose Configurations
+
+**Standard deployment (with Ollama):**
+```bash
+docker-compose up -d
+```
+
+**Transformers-only deployment:**
+```bash
+docker-compose -f docker-compose.transformers.yml up -d
+```
+
+### 🌐 Services
+
+| Service | Port | Description |
+|---------|------|-------------|
+| **cyber-assessment-reviewer** | 5000 | Main application |
+| **ollama** | 11434 | AI model server (Ollama mode only) |
+
+### 📁 Persistent Data
+
+Docker volumes are automatically created for:
+- `./data/uploads` - Uploaded assessment and evidence files
+- `./data/sessions` - User sessions and analysis results
+- `./data/logs` - Application logs
+- `./data/models` - Cached AI models
+- `./data/ollama` - Ollama model storage (Ollama mode)
+- `./data/transformers_cache` - Transformers model cache (Transformers mode)
+
+### ⚙️ Environment Configuration
+
+Copy and customize the environment file:
+```bash
+cp .env.example .env
+# Edit .env with your configuration
+```
+
+**Key environment variables:**
+```bash
+# Security
+SECRET_KEY=your-super-secret-key-change-this
+
+# AI Backend
+USE_OLLAMA=true                    # true for Ollama, false for Transformers
+OLLAMA_BASE_URL=http://ollama:11434
+DEFAULT_MODEL_NAME=mistral:7b-instruct
+
+# Performance
+WSGI_WORKERS=4
+WSGI_THREADS=4
+MAX_CONTROLS_DEFAULT=20
+
+# Resources
+MAX_CONTENT_LENGTH=52428800        # 50MB file upload limit
+```
+
+### 🔍 Health Checks
+
+Both services include comprehensive health checks:
+- **Application**: `http://localhost:5000/system_status`
+- **Ollama**: `http://localhost:11434/api/tags`
+
+### 📊 Resource Requirements
+
+**Minimum requirements:**
+- **RAM**: 4GB (Ollama mode), 8GB (Transformers mode)
+- **Storage**: 10GB for models and data
+- **CPU**: 2 cores minimum, 4+ recommended
+
+**Recommended for production:**
+- **RAM**: 8GB (Ollama), 16GB (Transformers)
+- **Storage**: 50GB SSD
+- **CPU**: 4+ cores
+- **GPU**: Optional but recommended for Transformers mode
+
+### 🐛 Docker Troubleshooting
+
+**Check service status:**
+```bash
+docker-compose ps
+docker-compose logs -f
+```
+
+**Restart services:**
+```bash
+docker-compose restart
+```
+
+**Clean rebuild:**
+```bash
+docker-compose down
+docker system prune -f
+./docker-build.sh
+./docker-deploy.sh
+```
+
+**Check Ollama models:**
+```bash
+docker-compose exec ollama ollama list
+```
+
+**Monitor resource usage:**
+```bash
+docker stats
+```
+
+### 🔒 Production Security
+
+For production deployments:
+
+1. **Set a strong SECRET_KEY**:
+   ```bash
+   export SECRET_KEY=$(openssl rand -hex 32)
+   ```
+
+2. **Use HTTPS with reverse proxy** (nginx/traefik)
+
+3. **Limit file upload sizes** and types
+
+4. **Regular security updates**:
+   ```bash
+   docker-compose pull
+   docker-compose up -d
+   ```
+
+5. **Monitor logs and metrics**
+
+### 🌍 Scaling and Load Balancing
+
+For high-availability deployments:
+
+```yaml
+# docker-compose.prod.yml
+services:
+  cyber-assessment-reviewer:
+    deploy:
+      replicas: 3
+      resources:
+        limits:
+          memory: 4G
+        reservations:
+          memory: 2G
+```
+
+### 🔧 GPU Support
+
+For NVIDIA GPU acceleration (Transformers mode):
+
+1. **Install NVIDIA Container Toolkit**
+2. **Uncomment GPU configuration** in docker-compose.yml
+3. **Deploy with GPU support**:
+   ```bash
+   docker-compose -f docker-compose.transformers.yml up -d
+   ```

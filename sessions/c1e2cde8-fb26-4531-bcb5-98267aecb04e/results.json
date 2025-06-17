@@ -1,548 +1,155 @@
 {
   "results": [
     {
-      "control_id": "N/A",
-      "control_name": "N/A",
+      "control_id": "AC-1",
+      "control_name": "Access Control Policy and Procedures",
       "requirement": "N/A",
-      "supplier_answer": "N/A",
-      "evidence_validity": "No Evidence",
-      "compliance_status": "Non-Compliant",
-      "risk_level": "High",
-      "key_findings": [
-        "Control implementation status is unknown.",
-        "Absence of provided evidence for assessment"
-      ],
-      "risks": [
-        "Lack of visible control implementation leads to potential security vulnerabilities"
-      ],
-      "remediation": [
-        "Request updated implementation status from the supplier",
-        "Collect and provide required evidence for control assessment",
-        "Conduct a comprehensive vulnerability assessment once control is implemented"
-      ],
-      "evidence_references": [],
-      "confidence_score": 0.0
-    },
-    {
-      "control_id": "N/A",
-      "control_name": "N/A",
-      "requirement": "N/A",
-      "supplier_answer": "N/A",
-      "evidence_validity": "No Evidence",
-      "compliance_status": "Non-Compliant",
-      "risk_level": "High",
-      "key_findings": [
-        "Lack of evident control implementation",
-        "Potential for unidentified security vulnerabilities"
-      ],
-      "risks": [
-        "Data Breach",
-        "System Compromise",
-        "Regulatory Fines"
-      ],
-      "remediation": [
-        "1. Conduct a thorough review and assessment to determine the implemented controls",
-        "2. Address identified gaps in control implementation",
-        "3. Develop a plan for ongoing monitoring and maintenance of cybersecurity controls"
-      ],
-      "evidence_references": [],
-      "confidence_score": 0.0
-    },
-    {
-      "control_id": "N/A",
-      "control_name": "N/A",
-      "requirement": "N/A",
-      "supplier_answer": "N/A",
-      "evidence_validity": "No Evidence",
-      "compliance_status": "Non-Compliant",
-      "risk_level": "High",
-      "key_findings": [],
-      "risks": [
-        "Lack of implemented controls increases risk of cybersecurity incidents"
-      ],
-      "remediation": [
-        "1. Obtain evidence demonstrating implementation of the control",
-        "2. Perform a comprehensive security assessment to identify vulnerabilities",
-        "3. Prioritize remediation based on risk level and organizational impact"
-      ],
-      "evidence_references": [],
-      "confidence_score": 0.0
-    },
-    {
-      "control_id": "N/A",
-      "control_name": "N/A",
-      "requirement": "N/A",
-      "supplier_answer": "N/A",
-      "evidence_validity": "No Evidence",
-      "compliance_status": "Non-Compliant",
-      "risk_level": "High",
-      "key_findings": [
-        "Control implementation status is unknown"
-      ],
-      "risks": [
-        "Lack of implemented control increases overall cybersecurity risk"
-      ],
-      "remediation": [
-        "1. Determine the control's ID, name, and requirement\n2. Confirm the supplier answer about its implementation status\n3. Implement or remediate the control as necessary"
-      ],
-      "evidence_references": [],
-      "confidence_score": 0.0
-    },
-    {
-      "control_id": "N/A",
-      "control_name": "N/A",
-      "requirement": "N/A",
-      "supplier_answer": "N/A",
-      "evidence_validity": "No Evidence",
-      "compliance_status": "Non-Compliant",
-      "risk_level": "High",
-      "key_findings": [
-        "Control implementation status is unknown"
-      ],
-      "risks": [
-        "Potential security vulnerabilities due to lack of implemented control"
-      ],
-      "remediation": [
-        "1. Obtain information on the control implementation status from supplier",
-        "2. If not implemented, initiate the process for implementing the control",
-        "3. Regularly monitor and verify the effective functioning of the control"
-      ],
-      "evidence_references": [],
-      "confidence_score": 0.0
-    },
-    {
-      "control_id": "N/A",
-      "control_name": "N/A",
-      "requirement": "N/A",
-      "supplier_answer": "N/A",
-      "evidence_validity": "No Evidence",
-      "compliance_status": "Non-Compliant",
-      "risk_level": "High",
-      "key_findings": [
-        "Control implementation status is unknown.",
-        "There is no evidence provided to demonstrate control implementation."
-      ],
-      "risks": [
-        "Unidentified security vulnerabilities due to lack of implemented controls.",
-        "Lack of visibility into the organization's cybersecurity posture."
-      ],
-      "remediation": [
-        "Obtain updated information about the control implementation status.",
-        "Gather and provide evidence for the specified control."
-      ],
-      "evidence_references": [],
-      "confidence_score": 0.0
-    },
-    {
-      "control_id": "N/A",
-      "control_name": "N/A",
-      "requirement": "N/A",
-      "supplier_answer": "Response",
-      "evidence_validity": "No Evidence",
-      "compliance_status": "Non-Compliant",
-      "risk_level": "High",
-      "key_findings": [
-        "Control implementation status is unknown.",
-        "Lack of evidence for control assessment."
-      ],
-      "risks": [
-        "Unidentified security risks due to the absence of implemented controls.",
-        "Potential data breaches or system vulnerabilities."
-      ],
-      "remediation": [
-        "Gather and document control implementation details.",
-        "Confirm control compliance with relevant standards such as NIST Cybersecurity Framework.",
-        "Address any identified security gaps."
-      ],
-      "evidence_references": [],
-      "confidence_score": 0.0
-    },
-    {
-      "control_id": "N/A",
-      "control_name": "N/A",
-      "requirement": "N/A",
-      "supplier_answer": "TestVendor_AN | Schneider Electric | Unknown",
-      "evidence_validity": "No Evidence",
-      "compliance_status": "Non-Compliant",
-      "risk_level": "High",
-      "key_findings": [
-        "Control implementation status is unknown.",
-        "Evidence provided does not demonstrate control implementation."
-      ],
-      "risks": [
-        "Risk of unimplemented controls leading to potential cybersecurity incidents.",
-        "Lack of visibility into the supplier's cybersecurity practices."
-      ],
-      "remediation": [
-        "Request updated information on control implementation status from TestVendor_AN",
-        "Schedule a detailed security assessment of Schneider Electric as soon as possible.",
-        "Establish and enforce stricter vendor cybersecurity requirements."
-      ],
-      "evidence_references": [],
-      "confidence_score": 0.0
-    },
-    {
-      "control_id": "N/A",
-      "control_name": "N/A",
-      "requirement": "N/A",
-      "supplier_answer": "Test_AN | Schneider Electric",
+      "supplier_answer": "Access control policies are documented in the \"Information Security Policy\" document, reviewed annually, and available to all employees on the company intranet.",
       "evidence_validity": "Partially Valid",
-      "compliance_status": "Non-Compliant",
+      "compliance_status": "Compliant (temporarily)",
       "risk_level": "Medium",
       "key_findings": [
-        "Evidence provided does not clearly demonstrate the control implementation status"
+        "Access control policies are documented and reviewed annually but the implementation status is unknown"
       ],
       "risks": [
-        "Potential unmitigated cybersecurity risks due to unknown control implementation status"
+        "Unverified access controls"
       ],
       "remediation": [
-        "1. Verify control implementation status with supplier, 2. Obtain evidence of compliance and implementation, 3. Update the risk assessment accordingly"
+        "Confirm access control policy implementation status",
+        "Ensure all employees have proper access rights",
+        "Implement monitoring and enforcement mechanisms for access controls"
       ],
       "evidence_references": [],
-      "confidence_score": 0.5
+      "confidence_score": 0.6
     },
     {
-      "control_id": "N/A",
-      "control_name": "N/A",
+      "control_id": "PR.IP-1",
+      "control_name": "Baseline Configuration",
       "requirement": "N/A",
-      "supplier_answer": "Direct",
-      "evidence_validity": "Invalid",
-      "compliance_status": "Non-Compliant",
-      "risk_level": "High",
-      "key_findings": [
-        "Control implementation status is unknown"
-      ],
-      "risks": [
-        "Lack of control implementation leads to increased risk of cyber threats and data breaches"
-      ],
-      "remediation": [
-        "1. Determine the implementation status of the control, 2. Implement the control if not already in place, 3. Document and verify the implementation for future audits"
-      ],
-      "evidence_references": [],
-      "confidence_score": 0.0
-    },
-    {
-      "control_id": "N/A",
-      "control_name": "N/A",
-      "requirement": "N/A",
-      "supplier_answer": "Brand Label",
-      "evidence_validity": "No Evidence",
-      "compliance_status": "Non-Compliant",
-      "risk_level": "High",
-      "key_findings": [
-        "Control information and status are missing"
-      ],
-      "risks": [
-        "Unaddressed control may result in data breaches or system failures"
-      ],
-      "remediation": [
-        "1. Gather complete control information and implementation status",
-        "2. Implement the identified control",
-        "3. Regularly review and update control assessments"
-      ],
-      "evidence_references": [],
-      "confidence_score": 0.0
-    },
-    {
-      "control_id": "N/A",
-      "control_name": "N/A",
-      "requirement": "N/A",
-      "supplier_answer": "N/A",
-      "evidence_validity": "No Evidence",
-      "compliance_status": "Non-Compliant",
-      "risk_level": "High",
-      "key_findings": [
-        "Control implementation status is unknown.",
-        "No evidence provided to support control implementation."
-      ],
-      "risks": [
-        "Unmanaged cybersecurity risks due to lack of control implementation.",
-        "Potential exposure to known security vulnerabilities."
-      ],
-      "remediation": [
-        "1. Obtain and document the control's implementation status.",
-        "2. Provide evidence supporting the control implementation.",
-        "3. Address any identified security vulnerabilities as a priority."
-      ],
-      "evidence_references": [],
-      "confidence_score": 0.0
-    },
-    {
-      "control_id": "N/A",
-      "control_name": "N/A",
-      "requirement": "N/A",
-      "supplier_answer": "2 (\ud83d\udfe1Moderate)",
+      "supplier_answer": "Baseline configurations exist for servers and employee workstations. However, they have not been updated to reflect the latest OS and application patches. Network device baselines are not yet established.",
       "evidence_validity": "Partially Valid",
       "compliance_status": "Non-Compliant",
+      "risk_level": "High",
+      "key_findings": [
+        "Baseline configurations exist but are not up-to-date with latest OS and application patches"
+      ],
+      "risks": [
+        "Exposure to known vulnerabilities due to outdated systems",
+        "Lack of network device baseline configuration"
+      ],
+      "remediation": [
+        "Update existing server and workstation configurations with latest patches",
+        "Establish network device baselines",
+        "Implement a regular patch management process"
+      ],
+      "evidence_references": [],
+      "confidence_score": 0.6
+    },
+    {
+      "control_id": "DE.CM-1",
+      "control_name": "Network Monitoring",
+      "requirement": "N/A",
+      "supplier_answer": "A Security Information and Event Management (SIEM) system is in place, collecting logs from critical systems. Alerts are configured for suspicious activities and monitored 24/7 by the security team.",
+      "evidence_validity": "Partially Valid",
+      "compliance_status": "Partially Compliant",
       "risk_level": "Medium",
       "key_findings": [
-        "Control implementation status is unknown.",
-        "Supplier has rated the control as Moderate, but no evidence provided for its implementation."
+        "SIEM system is in place but implementation status is unknown"
       ],
       "risks": [
-        "Potential unmanaged security risks associated with non-implemented controls.",
-        "Lack of visibility into the supplier's security posture and compliance."
+        "Potential lack of continuous monitoring for non-critical systems if they are not covered by the SIEM setup"
       ],
       "remediation": [
-        "Request and review updated information on the control implementation status from the supplier.",
-        "Collaborate with the supplier to develop a plan for proper control implementation.",
-        "Monitor the supplier's progress and ensure compliance with the established controls."
+        "Confirm complete deployment and proper configuration of SIEM across all critical and non-critical systems",
+        "Ensure 24/7 monitoring of alerts by the security team"
       ],
       "evidence_references": [],
-      "confidence_score": 0.5
+      "confidence_score": 0.6
     },
     {
-      "control_id": "N/A",
-      "control_name": "N/A",
+      "control_id": "RS.RP-1",
+      "control_name": "Response Planning",
       "requirement": "N/A",
-      "supplier_answer": "No",
-      "evidence_validity": "No Evidence",
-      "compliance_status": "Non-Compliant",
-      "risk_level": "High",
+      "supplier_answer": "The \"Incident Response Plan\" is documented, and tabletop exercises are conducted quarterly to test its effectiveness. The plan includes roles, responsibilities, and communication protocols.",
+      "evidence_validity": "Partially Valid",
+      "compliance_status": "Partially Compliant",
+      "risk_level": "Medium",
       "key_findings": [
-        "Supplier has not provided evidence of control implementation"
+        "The Incident Response Plan's implementation status is not provided.",
+        "Documentation and testing are in place, but actual implementation remains uncertain."
       ],
       "risks": [
-        "Lack of implemented controls increases the risk of a cybersecurity incident"
+        "Unclear incident response actions during a real event",
+        "Potential lack of immediate response due to uncertainty in the plan's implementation"
       ],
       "remediation": [
-        "Request additional evidence from supplier regarding control implementation",
-        "Implement identified control to reduce risk level"
+        "Obtain verification of Incident Response Plan implementation status.",
+        "Ensure regular and consistent testing of the Incident Response Plan outside of tabletop exercises."
       ],
       "evidence_references": [],
-      "confidence_score": 0.0
+      "confidence_score": 0.6
     },
     {
-      "control_id": "N/A",
-      "control_name": "N/A",
+      "control_id": "RC.RP-1",
+      "control_name": "Recovery Planning",
       "requirement": "N/A",
-      "supplier_answer": "N/A",
-      "evidence_validity": "No Evidence",
-      "compliance_status": "Non-Compliant",
-      "risk_level": "High",
-      "key_findings": [
-        "Control implementation status is unknown"
-      ],
-      "risks": [
-        "Lack of control implementation may lead to unmitigated cybersecurity risks"
-      ],
-      "remediation": [
-        "1. Obtain control implementation status from the supplier",
-        "2. Implement the control if not already in place",
-        "3. Document and verify control implementation properly"
-      ],
-      "evidence_references": [],
-      "confidence_score": 0.0
-    },
-    {
-      "control_id": "N/A",
-      "control_name": "N/A",
-      "requirement": "N/A",
-      "supplier_answer": "N/A",
-      "evidence_validity": "No Evidence",
-      "compliance_status": "Non-Compliant",
-      "risk_level": "High",
-      "key_findings": [
-        "Control is not implemented as required for the NIST Cybersecurity Framework.",
-        "Absence of control implementation may expose organization to potential cyber threats."
-      ],
-      "risks": [
-        "Data Breach",
-        "Unauthorized Access",
-        "System Downtime"
-      ],
-      "remediation": [
-        "1. Implement the missing control as per NIST Cybersecurity Framework requirements.",
-        "2. Conduct a thorough risk assessment to identify and prioritize potential vulnerabilities.",
-        "3. Establish a plan for regular control assessments to ensure ongoing compliance."
-      ],
-      "evidence_references": [],
-      "confidence_score": 0.0
-    },
-    {
-      "control_id": "N/A",
-      "control_name": "N/A",
-      "requirement": "N/A",
-      "supplier_answer": "Yes",
-      "evidence_validity": "No Evidence",
-      "compliance_status": "Non-Compliant",
-      "risk_level": "High",
-      "key_findings": [
-        "Control status is unknown, no evidence provided to support supplier claim of implementation."
-      ],
-      "risks": [
-        "Lack of control implementation leaves the system vulnerable to potential cyberattacks"
-      ],
-      "remediation": [
-        "1. Obtain evidence of control implementation, 2. Verify control effectiveness, 3. Address any identified vulnerabilities"
-      ],
-      "evidence_references": [],
-      "confidence_score": 0.0
-    },
-    {
-      "control_id": "N/A",
-      "control_name": "N/A",
-      "requirement": "N/A",
-      "supplier_answer": "Yes",
+      "supplier_answer": "A disaster recovery plan exists for critical systems, with data backed up to a secondary site. However, the last full recovery test was over a year ago, and the documented Recovery Time Objective (RTO) was not met.",
       "evidence_validity": "Partially Valid",
       "compliance_status": "Non-Compliant",
       "risk_level": "High",
       "key_findings": [
-        "The supplier answered 'Yes' but the implementation status is unknown.",
-        "There is no documented evidence of control implementation."
+        "Disaster recovery plan exists but last full test was over a year ago",
+        "RTO not met"
       ],
       "risks": [
-        "Lack of proper controls can lead to a data breach or system compromise.",
-        "The organization may not be meeting regulatory requirements."
+        "Data loss or downtime due to system failure",
+        "Lack of confidence in disaster recovery process"
       ],
       "remediation": [
-        "Obtain updated information on the implementation status of the control.",
-        "Gather and provide evidence demonstrating the control implementation.",
-        "Review and ensure compliance with relevant regulations."
+        "Regularly conduct full disaster recovery tests",
+        "Update Recovery Time Objective based on testing results"
       ],
       "evidence_references": [],
-      "confidence_score": 0.5
-    },
-    {
-      "control_id": "N/A",
-      "control_name": "N/A",
-      "requirement": "N/A",
-      "supplier_answer": "No",
-      "evidence_validity": "No Evidence",
-      "compliance_status": "Non-Compliant",
-      "risk_level": "High",
-      "key_findings": [
-        "Control not implemented",
-        "Lack of visibility into the supplier's cybersecurity measures"
-      ],
-      "risks": [
-        "Data breach due to lack of control implementation",
-        "Increased attack surface due to unmanaged risks"
-      ],
-      "remediation": [
-        "Request evidence of control implementation",
-        "Implement agreed-upon controls",
-        "Establish ongoing monitoring and management processes for the supplier's cybersecurity measures"
-      ],
-      "evidence_references": [],
-      "confidence_score": 0.0
-    },
-    {
-      "control_id": "N/A",
-      "control_name": "N/A",
-      "requirement": "N/A",
-      "supplier_answer": "Yes",
-      "evidence_validity": "Partially Valid",
-      "compliance_status": "Non-Compliant",
-      "risk_level": "High",
-      "key_findings": [
-        "Supplier answer does not provide sufficient evidence for control implementation status.",
-        "Lack of documentation or audit trails to demonstrate regular monitoring and maintenance of the control."
-      ],
-      "risks": [
-        "Unverified control implementation may expose the organization to potential security vulnerabilities.",
-        "Lack of proper monitoring and maintenance can lead to control failure."
-      ],
-      "remediation": [
-        "Request and verify documented evidence of control implementation from supplier.",
-        "Implement regular audits and maintain records of control monitoring and maintenance."
-      ],
-      "evidence_references": [],
-      "confidence_score": 0.5
+      "confidence_score": 0.6
     }
   ],
   "risk_metrics": {
-    "overall_risk_score": 67.0,
+    "overall_risk_score": 52.0,
     "risk_distribution": {
       "Critical": 0,
-      "High": 18,
-      "Medium": 2,
+      "High": 2,
+      "Medium": 3,
       "Low": 0,
       "Unknown": 0
     },
     "compliance_distribution": {
       "Compliant": 0,
-      "Partially Compliant": 0,
-      "Non-Compliant": 20,
-      "Unknown": 0
+      "Partially Compliant": 2,
+      "Non-Compliant": 2,
+      "Unknown": 0,
+      "Compliant (temporarily)": 1
     },
     "compliance_percentage": 0.0,
     "high_priority_controls": [
       {
-        "control_id": "N/A",
-        "control_name": "N/A",
+        "control_id": "PR.IP-1",
+        "control_name": "Baseline Configuration",
         "risk_level": "High",
         "compliance_status": "Non-Compliant",
-        "confidence_score": 0.5
+        "confidence_score": 0.6
       },
       {
-        "control_id": "N/A",
-        "control_name": "N/A",
+        "control_id": "RC.RP-1",
+        "control_name": "Recovery Planning",
         "risk_level": "High",
         "compliance_status": "Non-Compliant",
-        "confidence_score": 0.5
-      },
-      {
-        "control_id": "N/A",
-        "control_name": "N/A",
-        "risk_level": "High",
-        "compliance_status": "Non-Compliant",
-        "confidence_score": 0.0
-      },
-      {
-        "control_id": "N/A",
-        "control_name": "N/A",
-        "risk_level": "High",
-        "compliance_status": "Non-Compliant",
-        "confidence_score": 0.0
-      },
-      {
-        "control_id": "N/A",
-        "control_name": "N/A",
-        "risk_level": "High",
-        "compliance_status": "Non-Compliant",
-        "confidence_score": 0.0
-      },
-      {
-        "control_id": "N/A",
-        "control_name": "N/A",
-        "risk_level": "High",
-        "compliance_status": "Non-Compliant",
-        "confidence_score": 0.0
-      },
-      {
-        "control_id": "N/A",
-        "control_name": "N/A",
-        "risk_level": "High",
-        "compliance_status": "Non-Compliant",
-        "confidence_score": 0.0
-      },
-      {
-        "control_id": "N/A",
-        "control_name": "N/A",
-        "risk_level": "High",
-        "compliance_status": "Non-Compliant",
-        "confidence_score": 0.0
-      },
-      {
-        "control_id": "N/A",
-        "control_name": "N/A",
-        "risk_level": "High",
-        "compliance_status": "Non-Compliant",
-        "confidence_score": 0.0
-      },
-      {
-        "control_id": "N/A",
-        "control_name": "N/A",
-        "risk_level": "High",
-        "compliance_status": "Non-Compliant",
-        "confidence_score": 0.0
+        "confidence_score": 0.6
       }
     ],
-    "total_controls_assessed": 20
+    "total_controls_assessed": 5
   },
   "framework": "NIST",
-  "timestamp": "2025-06-16T17:55:32.334601",
-  "total_controls": 38,
-  "analyzed_controls": 20
+  "timestamp": "2025-06-17T01:58:17.684072",
+  "total_controls": 5,
+  "analyzed_controls": 5
 }

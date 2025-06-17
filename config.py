@@ -129,6 +129,33 @@ class ProductionConfig(Config):
     USE_PRODUCTION_SERVER = True  # Always use production server in production
     WSGI_WORKERS = int(os.environ.get('WSGI_WORKERS', 4))
     WSGI_THREADS = int(os.environ.get('WSGI_THREADS', 4))
+    HOST = os.environ.get('HOST', '0.0.0.0')  # Bind to all interfaces in production
+
+class DockerConfig(ProductionConfig):
+    """Docker container configuration"""
+    DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
+    LOG_LEVEL = os.environ.get('LOG_LEVEL', 'INFO')
+    HOST = '0.0.0.0'  # Always bind to all interfaces in containers
+    USE_PRODUCTION_SERVER = True
+
+    # Docker-optimized settings
+    SESSION_TIMEOUT = int(os.environ.get('SESSION_TIMEOUT', 7200))  # 2 hours
+    MAX_CONTROLS_DEFAULT = int(os.environ.get('MAX_CONTROLS_DEFAULT', 20))
+
+    # Container-specific paths
+    UPLOAD_FOLDER = '/app/uploads'
+    SESSION_FOLDER = '/app/sessions'
+    LOG_FILE = '/app/logs/cyber_assessment_reviewer.log'
+
+    @classmethod
+    def validate_config(cls):
+        """Additional validation for Docker deployment"""
+        super().validate_config()
+
+        # Ensure required directories exist
+        import pathlib
+        for directory in [cls.UPLOAD_FOLDER, cls.SESSION_FOLDER, '/app/logs']:
+            pathlib.Path(directory).mkdir(parents=True, exist_ok=True)
     
     @classmethod
     def validate_config(cls):
@@ -149,11 +176,16 @@ class TestingConfig(Config):
 def get_config(env: str = None) -> Config:
     """Get configuration based on environment"""
     env = env or os.environ.get('FLASK_ENV', 'development')
-    
+
+    # Check if running in Docker container
+    if os.path.exists('/.dockerenv') or os.environ.get('DOCKER_CONTAINER'):
+        return DockerConfig
+
     config_map = {
         'development': DevelopmentConfig,
         'production': ProductionConfig,
-        'testing': TestingConfig
+        'testing': TestingConfig,
+        'docker': DockerConfig
     }
-    
+
     return config_map.get(env, DevelopmentConfig)

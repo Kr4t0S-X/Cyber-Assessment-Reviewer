@@ -1,0 +1,80 @@
+version: '3.8'
+
+services:
+  # Cyber Assessment Reviewer with Transformers backend
+  cyber-assessment-reviewer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: transformers  # Use full dependencies with Transformers
+    container_name: cyber-assessment-reviewer-transformers
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      # Application Configuration
+      - FLASK_ENV=production
+      - DEBUG=false
+      - SECRET_KEY=${SECRET_KEY:-cyber-assessment-secret-change-in-production}
+      - USE_PRODUCTION_SERVER=true
+      - HOST=0.0.0.0
+      - PORT=5000
+      
+      # AI Backend Configuration (Transformers mode)
+      - USE_OLLAMA=false
+      - DEFAULT_MODEL_NAME=microsoft/DialoGPT-medium
+      
+      # WSGI Server Configuration
+      - WSGI_WORKERS=2  # Reduced for memory constraints
+      - WSGI_THREADS=2
+      - WSGI_TIMEOUT=300  # Increased timeout for model loading
+      
+      # Logging Configuration
+      - LOG_LEVEL=INFO
+      - LOG_FILE=/app/logs/cyber_assessment_reviewer.log
+      
+      # File Upload Configuration
+      - MAX_CONTENT_LENGTH=52428800  # 50MB
+      
+      # Skip dependency check in container
+      - SKIP_DEP_CHECK=true
+    volumes:
+      # Persistent data volumes
+      - ./data/uploads:/app/uploads
+      - ./data/sessions:/app/sessions
+      - ./data/logs:/app/logs
+      - ./data/models:/app/models
+      # Cache for Transformers models
+      - ./data/transformers_cache:/root/.cache/huggingface
+    networks:
+      - cyber-assessment-network
+    # Resource limits for Transformers mode
+    deploy:
+      resources:
+        limits:
+          memory: 8G  # Adjust based on your system
+        reservations:
+          memory: 4G
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/system_status"]
+      interval: 60s  # Longer interval for resource-intensive mode
+      timeout: 30s
+      retries: 3
+      start_period: 300s  # Longer startup time for model loading
+
+networks:
+  cyber-assessment-network:
+    driver: bridge
+    name: cyber-assessment-network
+
+volumes:
+  uploads:
+    driver: local
+  sessions:
+    driver: local
+  logs:
+    driver: local
+  models:
+    driver: local
+  transformers_cache:
+    driver: local

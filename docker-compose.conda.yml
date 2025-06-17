@@ -1,0 +1,220 @@
+version: '3.8'
+
+services:
+  # Main Cyber Assessment Reviewer application with Conda
+  cyber-assessment-reviewer-conda:
+    build:
+      context: .
+      dockerfile: Dockerfile.conda
+      target: production  # Use production stage by default
+    container_name: cyber-assessment-reviewer-conda
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      # Application Configuration
+      - FLASK_ENV=production
+      - DEBUG=false
+      - SECRET_KEY=${SECRET_KEY:-cyber-assessment-secret-change-in-production}
+      - USE_PRODUCTION_SERVER=true
+      - HOST=0.0.0.0
+      - PORT=5000
+      
+      # Conda Environment Configuration
+      - CONDA_ENV_NAME=cyber-assessment-env
+      - CONDA_DEFAULT_ENV=cyber-assessment-env
+      
+      # AI Backend Configuration
+      - USE_OLLAMA=true
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - DEFAULT_MODEL_NAME=mistral:7b-instruct
+      
+      # WSGI Server Configuration
+      - WSGI_WORKERS=4
+      - WSGI_THREADS=4
+      - WSGI_TIMEOUT=120
+      
+      # Logging Configuration
+      - LOG_LEVEL=INFO
+      - LOG_FILE=/app/logs/cyber_assessment_reviewer.log
+      
+      # File Upload Configuration
+      - MAX_CONTENT_LENGTH=52428800  # 50MB
+      
+      # Skip dependency check in container (conda handles this)
+      - SKIP_DEP_CHECK=true
+      
+      # Conda-specific optimizations
+      - CONDA_ALWAYS_YES=true
+      - PYTHONUNBUFFERED=1
+      - PYTHONDONTWRITEBYTECODE=1
+    volumes:
+      # Persistent data volumes
+      - ./data/uploads:/app/uploads
+      - ./data/sessions:/app/sessions
+      - ./data/logs:/app/logs
+      - ./data/models:/app/models
+      # Conda package cache (optional, for faster rebuilds)
+      - conda-pkgs-cache:/opt/conda/pkgs
+    networks:
+      - cyber-assessment-network
+    depends_on:
+      - ollama
+    healthcheck:
+      test: ["CMD", "/opt/conda/envs/cyber-assessment-env/bin/python", "-c", "import requests; requests.get('http://localhost:5000/system_status', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    # Resource limits for conda environment
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+          cpus: '2.0'
+        reservations:
+          memory: 2G
+          cpus: '1.0'
+
+  # Development version with additional tools
+  cyber-assessment-reviewer-conda-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.conda
+      target: development  # Use development stage
+    container_name: cyber-assessment-reviewer-conda-dev
+    restart: unless-stopped
+    ports:
+      - "5001:5000"  # Different port for dev
+      - "8888:8888"  # Jupyter notebook port
+    environment:
+      # Development Configuration
+      - FLASK_ENV=development
+      - DEBUG=true
+      - SECRET_KEY=dev-secret-key
+      - USE_PRODUCTION_SERVER=false
+      - HOST=0.0.0.0
+      - PORT=5000
+      
+      # Conda Environment Configuration
+      - CONDA_ENV_NAME=cyber-assessment-env
+      - CONDA_DEFAULT_ENV=cyber-assessment-env
+      
+      # AI Backend Configuration
+      - USE_OLLAMA=true
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - DEFAULT_MODEL_NAME=mistral:7b-instruct
+      
+      # Development-specific
+      - LOG_LEVEL=DEBUG
+      - PYTHONPATH=/app
+    volumes:
+      # Mount source code for development
+      - .:/app
+      - conda-pkgs-cache:/opt/conda/pkgs
+    networks:
+      - cyber-assessment-network
+    depends_on:
+      - ollama
+    profiles:
+      - dev  # Only start with --profile dev
+
+  # Ollama service for AI model serving
+  ollama:
+    image: ollama/ollama:latest
+    container_name: cyber-assessment-ollama-conda
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
+    environment:
+      - OLLAMA_HOST=0.0.0.0
+    volumes:
+      # Persistent model storage
+      - ./data/ollama:/root/.ollama
+    networks:
+      - cyber-assessment-network
+    # GPU support (uncomment if you have NVIDIA GPU)
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # Model initialization service (runs once to pull models)
+  ollama-init:
+    image: ollama/ollama:latest
+    container_name: cyber-assessment-ollama-init-conda
+    depends_on:
+      - ollama
+    networks:
+      - cyber-assessment-network
+    environment:
+      - OLLAMA_HOST=http://ollama:11434
+    command: >
+      sh -c "
+        echo 'Waiting for Ollama to be ready...' &&
+        until curl -f http://ollama:11434/api/tags; do
+          echo 'Waiting for Ollama...'
+          sleep 5
+        done &&
+        echo 'Ollama is ready. Pulling models...' &&
+        ollama pull mistral:7b-instruct &&
+        echo 'Models pulled successfully!'
+      "
+    restart: "no"  # Run only once
+
+  # Conda environment testing service
+  conda-test:
+    build:
+      context: .
+      dockerfile: Dockerfile.conda
+      target: development
+    container_name: cyber-assessment-conda-test
+    environment:
+      - CONDA_ENV_NAME=cyber-assessment-env
+      - PYTHONPATH=/app
+    volumes:
+      - .:/app
+      - conda-pkgs-cache:/opt/conda/pkgs
+    networks:
+      - cyber-assessment-network
+    command: >
+      sh -c "
+        echo 'Testing conda environment...' &&
+        python test_conda_integration.py &&
+        echo 'Running application tests...' &&
+        python -m pytest test_*.py -v &&
+        echo 'All tests completed!'
+      "
+    profiles:
+      - test  # Only start with --profile test
+
+networks:
+  cyber-assessment-network:
+    driver: bridge
+    name: cyber-assessment-conda-network
+
+volumes:
+  # Named volumes for better management
+  uploads:
+    driver: local
+  sessions:
+    driver: local
+  logs:
+    driver: local
+  models:
+    driver: local
+  ollama:
+    driver: local
+  # Conda-specific volumes
+  conda-pkgs-cache:
+    driver: local
+    name: cyber-assessment-conda-pkgs

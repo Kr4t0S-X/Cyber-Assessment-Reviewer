@@ -1,0 +1,68 @@
+{
+  "report_id": "report_20250617_024950",
+  "generated_at": "2025-06-17T02:49:50.494703",
+  "period_start": "2025-06-16T02:49:50.486667",
+  "period_end": "2025-06-17T02:49:50.486667",
+  "summary_metrics": {
+    "total_assessments": 7,
+    "average_quality_score": 0.0,
+    "compliance_accuracy": 0.0,
+    "risk_accuracy": 0.0,
+    "user_satisfaction": 0.0,
+    "improvement_rate": 0.0
+  },
+  "trends": [
+    {
+      "metric_name": "average_quality_score",
+      "trend_direction": "stable",
+      "trend_strength": 0.1,
+      "current_value": 0.0,
+      "previous_value": 0.0,
+      "change_percentage": 0.0,
+      "confidence": 0.14
+    },
+    {
+      "metric_name": "compliance_accuracy",
+      "trend_direction": "stable",
+      "trend_strength": 0.1,
+      "current_value": 0.0,
+      "previous_value": 0.0,
+      "change_percentage": 0.0,
+      "confidence": 0.14
+    },
+    {
+      "metric_name": "risk_accuracy",
+      "trend_direction": "stable",
+      "trend_strength": 0.1,
+      "current_value": 0.0,
+      "previous_value": 0.0,
+      "change_percentage": 0.0,
+      "confidence": 0.14
+    },
+    {
+      "metric_name": "user_satisfaction",
+      "trend_direction": "stable",
+      "trend_strength": 0.1,
+      "current_value": 0.0,
+      "previous_value": 0.0,
+      "change_percentage": 0.0,
+      "confidence": 0.14
+    }
+  ],
+  "insights": [
+    "AI model quality needs improvement - consider additional training",
+    "Compliance determination accuracy is below target - review prompt engineering",
+    "Risk assessment accuracy needs improvement - update risk criteria"
+  ],
+  "recommendations": [
+    "Run comprehensive model retraining with recent feedback data",
+    "Implement additional validation rules and expert review processes"
+  ],
+  "improvement_impact": {
+    "average_quality_score_improvement": 0.0,
+    "compliance_accuracy_improvement": 0.0,
+    "validation_pass_rate_improvement": 0.0,
+    "total_cycles": 4,
+    "success_rate": 0.0
+  }
+}

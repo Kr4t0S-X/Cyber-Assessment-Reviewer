@@ -1,0 +1,146 @@
+{
+  "cycle_date": "2025-06-17T02:49:34.369937",
+  "analysis_period_days": 7,
+  "insights_found": 5,
+  "improvements_generated": 5,
+  "auto_applied_improvements": 1,
+  "insights": [
+    {
+      "insight_id": "compliance_20250617_024934",
+      "type": "compliance_pattern",
+      "description": "Frequent compliance status corrections: Compliant -> Non-Compliant",
+      "frequency": 3,
+      "confidence": 0.3,
+      "affected_controls": [
+        "PR.DS-1"
+      ],
+      "affected_frameworks": [
+        "NIST"
+      ]
+    },
+    {
+      "insight_id": "compliance_20250617_024934",
+      "type": "compliance_pattern",
+      "description": "Frequent compliance status corrections: Compliant -> Partially Compliant",
+      "frequency": 3,
+      "confidence": 0.3,
+      "affected_controls": [
+        "PR.AC-1"
+      ],
+      "affected_frameworks": [
+        "NIST"
+      ]
+    },
+    {
+      "insight_id": "risk_20250617_024934",
+      "type": "risk_pattern",
+      "description": "Frequent risk level corrections: Low -> High",
+      "frequency": 3,
+      "confidence": 0.375,
+      "affected_controls": [
+        "PR.DS-1",
+        "PR.DS-1",
+        "PR.DS-1"
+      ],
+      "affected_frameworks": [
+        "NIST"
+      ]
+    },
+    {
+      "insight_id": "risk_20250617_024934",
+      "type": "risk_pattern",
+      "description": "Frequent risk level corrections: Low -> Medium",
+      "frequency": 3,
+      "confidence": 0.375,
+      "affected_controls": [
+        "PR.AC-1",
+        "PR.AC-1",
+        "PR.AC-1"
+      ],
+      "affected_frameworks": [
+        "NIST"
+      ]
+    },
+    {
+      "insight_id": "framework_NIST_20250617_024934",
+      "type": "framework_pattern",
+      "description": "High error rate in NIST framework: 100.0%",
+      "frequency": 6,
+      "confidence": 1.0,
+      "affected_controls": [
+        "PR.DS-1",
+        "PR.AC-1",
+        "PR.DS-1",
+        "PR.AC-1",
+        "PR.DS-1"
+      ],
+      "affected_frameworks": [
+        "NIST"
+      ]
+    }
+  ],
+  "improvements": [
+    {
+      "action_id": "framework_NIST_20250617_024934",
+      "type": "prompt_update",
+      "priority": 5,
+      "description": "Enhance NIST framework-specific guidance",
+      "target": "ai_backend.py",
+      "confidence": 1.0,
+      "impact": "high",
+      "evidence_count": 6
+    },
+    {
+      "action_id": "risk_criteria_20250617_024934",
+      "type": "knowledge_update",
+      "priority": 4,
+      "description": "Update risk assessment criteria for Low to High transitions",
+      "target": "cybersecurity_knowledge.py",
+      "confidence": 0.375,
+      "impact": "high",
+      "evidence_count": 3
+    },
+    {
+      "action_id": "risk_criteria_20250617_024934",
+      "type": "knowledge_update",
+      "priority": 4,
+      "description": "Update risk assessment criteria for Low to Medium transitions",
+      "target": "cybersecurity_knowledge.py",
+      "confidence": 0.375,
+      "impact": "high",
+      "evidence_count": 3
+    },
+    {
+      "action_id": "prompt_compliance_20250617_024934",
+      "type": "prompt_update",
+      "priority": 3,
+      "description": "Update prompts to better distinguish Compliant vs Non-Compliant compliance",
+      "target": "ai_backend.py",
+      "confidence": 0.3,
+      "impact": "medium",
+      "evidence_count": 3
+    },
+    {
+      "action_id": "prompt_compliance_20250617_024934",
+      "type": "prompt_update",
+      "priority": 3,
+      "description": "Update prompts to better distinguish Compliant vs Partially Compliant compliance",
+      "target": "ai_backend.py",
+      "confidence": 0.3,
+      "impact": "medium",
+      "evidence_count": 3
+    }
+  ],
+  "auto_applied": [
+    {
+      "action_id": "framework_NIST_20250617_024934",
+      "type": "prompt_update",
+      "priority": 5,
+      "description": "Enhance NIST framework-specific guidance",
+      "target": "ai_backend.py",
+      "confidence": 1.0,
+      "impact": "high",
+      "evidence_count": 6
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+[
+  {
+    "template_id": "nist_access_control",
+    "framework": "NIST",
+    "control_category": "access_control",
+    "base_prompt": "You are analyzing an access control implementation for NIST framework compliance.\n                \nCONTROL ANALYSIS FOCUS:\n- Identity and access management systems\n- Authentication and authorization mechanisms\n- Privileged access controls\n- Access review processes\n\nEVIDENCE EVALUATION CRITERIA:\n- Look for multi-factor authentication implementation\n- Verify role-based access control (RBAC) deployment\n- Check for regular access reviews and audits\n- Assess privileged access management (PAM) systems\n\nCOMPLIANCE DETERMINATION GUIDELINES:\n- Compliant: All access control mechanisms properly implemented with evidence\n- Partially Compliant: Some mechanisms in place but gaps exist\n- Non-Compliant: Significant access control deficiencies identified",
+    "adaptive_sections": {
+      "evidence_focus": "Standard evidence evaluation",
+      "risk_assessment": "Standard risk assessment approach",
+      "compliance_criteria": "Standard compliance criteria"
+    },
+    "performance_metrics": {
+      "accuracy": 0.7,
+      "confidence": 0.6
+    },
+    "last_updated": "2025-06-17T02:48:11.575513",
+    "version": 1
+  },
+  {
+    "template_id": "nist_data_protection",
+    "framework": "NIST",
+    "control_category": "data_protection",
+    "base_prompt": "You are analyzing data protection controls for NIST framework compliance.\n                \nCONTROL ANALYSIS FOCUS:\n- Data encryption at rest and in transit\n- Data classification and handling\n- Data loss prevention (DLP) systems\n- Backup and recovery procedures\n\nEVIDENCE EVALUATION CRITERIA:\n- Verify encryption algorithms and key management\n- Check data classification policies and implementation\n- Assess DLP system configuration and effectiveness\n- Review backup encryption and testing procedures\n\nCOMPLIANCE DETERMINATION GUIDELINES:\n- Compliant: Comprehensive data protection with strong encryption\n- Partially Compliant: Basic protection in place but improvements needed\n- Non-Compliant: Inadequate or missing data protection controls",
+    "adaptive_sections": {
+      "evidence_focus": "Standard evidence evaluation",
+      "risk_assessment": "Standard risk assessment approach",
+      "compliance_criteria": "Standard compliance criteria"
+    },
+    "performance_metrics": {
+      "accuracy": 0.7,
+      "confidence": 0.6
+    },
+    "last_updated": "2025-06-17T02:48:11.575513",
+    "version": 1
+  }
+]

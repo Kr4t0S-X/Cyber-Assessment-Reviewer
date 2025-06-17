@@ -13,6 +13,8 @@ from typing import Dict, Any, List, Optional
 from models import AssessmentResult, ControlData, RiskMetrics
 from config import Config
 from ai_validation import AIResponseValidator
+from feedback_system import FeedbackCollector
+from adaptive_prompts import AdaptivePromptManager
 
 logger = logging.getLogger(__name__)
 
@@ -243,7 +245,11 @@ class CyberAssessmentReviewer:
         # Initialize response validator
         self.validator = AIResponseValidator()
 
-        logger.info("Model initialization complete")
+        # Initialize feedback system and adaptive prompts
+        self.feedback_collector = FeedbackCollector()
+        self.adaptive_prompts = AdaptivePromptManager()
+
+        logger.info("Model initialization complete with feedback system")
     
     def _initialize_backend(self) -> Optional[AIBackend]:
         """Initialize the appropriate AI backend"""
@@ -270,10 +276,21 @@ class CyberAssessmentReviewer:
         return None
 
     def create_cyber_prompt(self, control: ControlData, evidence_text: str, framework: str = "NIST") -> str:
-        """Create specialized prompt for cyber assessment analysis with enhanced cybersecurity focus"""
+        """Create specialized prompt for cyber assessment analysis with adaptive enhancement"""
         framework_name = self.config.FRAMEWORKS.get(framework, framework)
 
-        # Get framework-specific guidance
+        # Try to get adaptive prompt first
+        try:
+            adaptive_prompt = self.adaptive_prompts.get_adaptive_prompt(
+                framework, control.control_id
+            )
+            if adaptive_prompt:
+                # Customize adaptive prompt with control-specific information
+                return self._customize_adaptive_prompt(adaptive_prompt, control, evidence_text, framework)
+        except Exception as e:
+            logger.warning(f"Failed to get adaptive prompt, using fallback: {e}")
+
+        # Fallback to original prompt with framework guidance
         framework_guidance = self._get_framework_guidance(framework)
 
         prompt = f"""You are a senior cybersecurity compliance auditor with 15+ years of experience in {framework_name} assessments.
@@ -346,6 +363,43 @@ Provide your analysis in this exact JSON format:
 Provide ONLY the JSON response without additional text or formatting."""
 
         return prompt
+
+    def _customize_adaptive_prompt(self, adaptive_prompt: str, control: ControlData,
+                                 evidence_text: str, framework: str) -> str:
+        """Customize adaptive prompt with control-specific information"""
+
+        # Add control-specific context
+        customized_prompt = f"""{adaptive_prompt}
+
+=== CONTROL ANALYSIS CONTEXT ===
+Framework: {framework}
+Control ID: {control.control_id}
+Control Name: {control.control_name}
+Control Requirement: {control.requirement}
+Supplier's Claimed Implementation: {control.answer}
+Declared Status: {control.status or 'Unknown'}
+
+=== EVIDENCE TO ANALYZE ===
+{evidence_text[:4000]}
+
+=== REQUIRED OUTPUT FORMAT ===
+Provide your analysis in this exact JSON format:
+{{
+    "evidence_validity": "Valid|Partially Valid|Invalid|No Evidence",
+    "compliance_status": "Compliant|Partially Compliant|Non-Compliant",
+    "risk_level": "Critical|High|Medium|Low",
+    "confidence_score": 0.0-1.0,
+    "key_findings": ["specific finding 1", "specific finding 2", "specific finding 3"],
+    "identified_risks": ["specific risk 1", "specific risk 2", "specific risk 3"],
+    "remediation_steps": ["actionable step 1", "actionable step 2", "actionable step 3"],
+    "evidence_gaps": ["missing evidence 1", "missing evidence 2"],
+    "technical_details": ["technical observation 1", "technical observation 2"],
+    "compliance_rationale": "Detailed explanation of compliance determination based on evidence"
+}}
+
+Provide ONLY the JSON response without additional text or formatting."""
+
+        return customized_prompt
 
     def _get_framework_guidance(self, framework: str) -> str:
         """Get framework-specific guidance for analysis"""
@@ -527,6 +581,27 @@ Key Evidence Types to Look For:
 
             # Validate the AI response
             validation_result = self.validator.validate_response(result, evidence_text, control)
+
+            # Collect validation feedback
+            try:
+                original_result_dict = {
+                    'compliance_status': result.compliance_status,
+                    'risk_level': result.risk_level,
+                    'confidence_score': result.confidence_score,
+                    'key_findings': result.key_findings
+                }
+
+                validation_result_dict = {
+                    'quality_score': validation_result.quality_score,
+                    'validation_issues': validation_result.validation_issues,
+                    'recommendations': validation_result.recommendations
+                }
+
+                self.feedback_collector.collect_validation_feedback(
+                    control.control_id, framework, original_result_dict, validation_result_dict
+                )
+            except Exception as e:
+                logger.warning(f"Failed to collect validation feedback: {e}")
 
             # Adjust confidence score based on validation
             result.confidence_score *= validation_result.confidence_adjustment

@@ -1,0 +1,34 @@
+{
+  "cycle_id": "cycle_20250617_024817",
+  "start_time": "2025-06-17T02:48:17.700104",
+  "end_time": "2025-06-17T02:48:22.701960",
+  "trigger_reason": "Test learning cycle with collected feedback",
+  "metrics_before": {
+    "timestamp": "2025-06-17T02:48:17.699595",
+    "period_days": 7,
+    "total_assessments": 2,
+    "average_quality_score": 0.0,
+    "average_confidence_score": 0.875,
+    "compliance_accuracy": 0.0,
+    "risk_accuracy": 0.0,
+    "validation_pass_rate": 0.0,
+    "user_satisfaction_score": 0.19999999999999996,
+    "improvement_trend": "stable"
+  },
+  "metrics_after": {
+    "timestamp": "2025-06-17T02:48:22.701960",
+    "period_days": 1,
+    "total_assessments": 2,
+    "average_quality_score": 0.0,
+    "average_confidence_score": 0.875,
+    "compliance_accuracy": 0.0,
+    "risk_accuracy": 0.0,
+    "validation_pass_rate": 0.0,
+    "user_satisfaction_score": 0.19999999999999996,
+    "improvement_trend": "stable"
+  },
+  "insights_found": 0,
+  "improvements_applied": 0,
+  "success_rate": 0.0,
+  "status": "completed"
+}

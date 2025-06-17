@@ -31,7 +31,49 @@ cyber-assessment-reviewer/
 
 ## 🛠️ Installation
 
-### Option 1: With Ollama (Recommended)
+### 🚀 Quick Setup (Automated)
+
+**Recommended**: Use the automated setup script that detects your environment:
+
+```bash
+# Clone the repository
+git clone https://github.com/Kr4t0S-X/Cyber-Assessment-Reviewer.git
+cd Cyber-Assessment-Reviewer
+
+# Run automated setup (detects conda/pip automatically)
+python setup_environment.py
+```
+
+### 🐍 Conda Installation (Recommended)
+
+**Best for**: Better dependency management and environment isolation
+
+#### Windows:
+```cmd
+setup-conda.bat
+```
+
+#### Linux/macOS:
+```bash
+./setup-conda.sh
+```
+
+#### Manual Conda Setup:
+```bash
+# Create environment from file
+conda env create -f environment.yml
+conda activate cyber-assessment-env
+
+# Or create manually
+conda create -n cyber-assessment-env python=3.10 -y
+conda activate cyber-assessment-env
+conda install -c conda-forge flask pandas numpy requests python-docx openpyxl pypdf2 python-pptx transformers torch scikit-learn -y
+pip install ollama
+```
+
+### 📦 Traditional Installation
+
+#### Option 1: With Ollama (Recommended)
 
 1. **Install Ollama** (easier setup, better performance):
    ```bash
@@ -40,17 +82,25 @@ cyber-assessment-reviewer/
    ollama pull mistral:7b-instruct
    ```
 
-2. **Install core dependencies**:
+2. **Create virtual environment and install dependencies**:
    ```bash
+   python -m venv cyber-assessment-env
+   # Windows: cyber-assessment-env\Scripts\activate
+   # Linux/macOS: source cyber-assessment-env/bin/activate
    pip install -r requirements-core.txt
    ```
 
-### Option 2: With Transformers (No Ollama)
+#### Option 2: With Transformers (No Ollama)
 
-1. **Install all dependencies** (includes PyTorch and Transformers):
+1. **Create virtual environment and install all dependencies**:
    ```bash
+   python -m venv cyber-assessment-env
+   # Windows: cyber-assessment-env\Scripts\activate
+   # Linux/macOS: source cyber-assessment-env/bin/activate
    pip install -r requirements.txt
    ```
+
+> 📖 **Detailed Installation Guide**: See [INSTALLATION_GUIDE.md](INSTALLATION_GUIDE.md) for comprehensive setup instructions, troubleshooting, and advanced options.
 
 ## 🚀 Usage
 

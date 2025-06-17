@@ -14,6 +14,7 @@ from config import Config
 from models import ControlData, AnalysisSession
 from file_processors import AssessmentFileProcessor, EvidenceProcessor, is_supported_file_type
 from ai_backend import CyberAssessmentReviewer
+from analysis_workflow import OptimizedAnalysisWorkflow
 from templates import get_html_template
 from utils import (
     allowed_file, secure_save_file, clean_sample_control, 
@@ -25,9 +26,10 @@ logger = logging.getLogger(__name__)
 def create_routes(app: Flask, config: Config, reviewer: CyberAssessmentReviewer):
     """Create and register all Flask routes"""
     
-    # Initialize processors
+    # Initialize processors and workflow
     assessment_processor = AssessmentFileProcessor(config)
     evidence_processor = EvidenceProcessor(config)
+    optimized_workflow = OptimizedAnalysisWorkflow(reviewer)
     
     @app.route('/')
     def index():
@@ -159,13 +161,16 @@ def create_routes(app: Flask, config: Config, reviewer: CyberAssessmentReviewer)
             # Get framework and analysis parameters
             framework = session.get('framework', 'NIST')
             max_controls = min(len(controls), int(request.json.get('max_controls', config.MAX_CONTROLS_DEFAULT)))
-            
-            # Analyze controls
-            results = reviewer.analyze_multiple_controls(
-                controls[:max_controls], 
-                evidence_texts, 
+            analysis_depth = request.json.get('analysis_depth', 'standard')  # basic, standard, comprehensive
+
+            logger.info(f"Starting optimized analysis of {max_controls} controls with framework {framework}")
+
+            # Use optimized workflow for systematic analysis
+            results = optimized_workflow.analyze_controls_systematically(
+                controls[:max_controls],
+                evidence_texts,
                 framework,
-                max_controls
+                analysis_depth
             )
             
             # Calculate risk metrics

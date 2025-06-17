@@ -1,0 +1,34 @@
+{
+  "results": [
+    {
+      "test_id": "test_1",
+      "passed": true,
+      "accuracy_score": 0.8,
+      "compliance_match": true,
+      "risk_level_match": true,
+      "findings_quality": 0.7,
+      "issues": [],
+      "ai_result": {
+        "control_id": "CTRL-1",
+        "compliance_status": "Compliant",
+        "confidence_score": 0.8
+      }
+    },
+    {
+      "test_id": "test_2",
+      "passed": false,
+      "accuracy_score": 0.0,
+      "compliance_match": false,
+      "risk_level_match": false,
+      "findings_quality": 0.0,
+      "issues": [
+        "AI analysis failed"
+      ],
+      "ai_result": null
+    }
+  ],
+  "metrics": {
+    "pass_rate": 0.5,
+    "total_tests": 2
+  }
+}

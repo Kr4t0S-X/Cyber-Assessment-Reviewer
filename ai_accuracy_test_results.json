@@ -1,0 +1,107 @@
+{
+  "results": [
+    {
+      "test_id": "access_control_compliant",
+      "passed": false,
+      "accuracy_score": 0.6,
+      "compliance_match": true,
+      "risk_level_match": false,
+      "findings_quality": 0.6666666666666666,
+      "issues": [],
+      "ai_result": {
+        "control_id": "PR.AC-1",
+        "control_name": "Access Control Policy",
+        "requirement": "Identities and credentials are issued, managed, verified, revoked, and audited for authorized devices, users and processes",
+        "supplier_answer": "We have implemented a comprehensive identity and access management system with automated provisioning and regular access reviews.",
+        "evidence_validity": "Valid",
+        "compliance_status": "Compliant",
+        "risk_level": "Medium",
+        "key_findings": [
+          "Multi-factor authentication implemented for all users.",
+          "Role-based access control with least privilege principles is in place.",
+          "Quarterly access reviews conducted and documented."
+        ],
+        "risks": [
+          "Potential risk of unauthorized access due to outdated or missing access control matrix.",
+          "Risk of inadequate response to changes in user roles or responsibilities."
+        ],
+        "remediation": [
+          "Regularly update and maintain the access control matrix.",
+          "Implement real-time monitoring for user role changes and ensure timely access reviews.",
+          "Ensure that access review results are acted upon in a timely manner."
+        ],
+        "evidence_references": [
+          "Enhanced_Evidence_PR.AC-1 - Relevant_Evidence"
+        ],
+        "confidence_score": 0.6921428571428573,
+        "technical_details": [
+          "The evidence provided shows the implementation of multi-factor authentication, role-based access control, automated user provisioning/deprovisioning, privileged access management, and regular access reviews.",
+          "No technical details regarding continuous monitoring, anomaly detection, or protective technology were found in the evidence.",
+          "Evidence Quality Score: 0.87",
+          "Coverage Score: 0.40"
+        ],
+        "compliance_rationale": "The provided evidence demonstrates that the supplier has implemented key aspects of an identity and access management system, meeting the control requirement for PR.AC-1. However, there is a lack of evidence regarding continuous monitoring, anomaly detection, or protective technology as part of their system. This could pose a medium risk to their overall security posture, as these are essential components of a robust identity and access management system. To achieve full compliance, the supplier should address the identified gaps by implementing appropriate monitoring, detecting mechanisms, and protective technologies.",
+        "evidence_gaps": [
+          "Lack of evidence regarding continuous monitoring, anomaly detection, or protective technology as part of the identity and access management system."
+        ]
+      }
+    },
+    {
+      "test_id": "encryption_non_compliant",
+      "passed": true,
+      "accuracy_score": 0.7999999999999999,
+      "compliance_match": true,
+      "risk_level_match": true,
+      "findings_quality": 0.3333333333333333,
+      "issues": [],
+      "ai_result": {
+        "control_id": "PR.DS-1",
+        "control_name": "Data Protection",
+        "requirement": "Data-at-rest is protected",
+        "supplier_answer": "We encrypt some sensitive data using various methods.",
+        "evidence_validity": "Partially Valid",
+        "compliance_status": "Non-Compliant",
+        "risk_level": "High",
+        "key_findings": [
+          "Some databases and backup systems use encryption but the encryption methods are not specified to be strong.",
+          "File shares are not encrypted.",
+          "No centralized key management is in place."
+        ],
+        "risks": [
+          "Unauthorized access to sensitive data at rest due to weak or outdated encryption methods.",
+          "Lack of proper key management increases the risk of key loss or theft.",
+          "Data breaches can occur when data is not encrypted in file shares."
+        ],
+        "remediation": [
+          "Upgrade encryption methods for databases, backup systems, and file shares to strong algorithms such as AES.",
+          "Implement a centralized key management system for secure handling of encryption keys.",
+          "Update the outdated encryption policies."
+        ],
+        "evidence_references": [
+          "Enhanced_Evidence_PR.DS-1 - Relevant_Evidence"
+        ],
+        "confidence_score": 0.46499999999999997,
+        "technical_details": [
+          "Some databases use basic encryption (e.g., AES-128) while backup systems use weak encryption (DES).",
+          "No centralized key management is in place, potentially leading to misconfigurations or errors.",
+          "Evidence Quality Score: 1.00",
+          "Coverage Score: 0.40"
+        ],
+        "compliance_rationale": "The provided evidence demonstrates that some sensitive data at rest is protected using certain encryption methods but not all aspects of the control requirement are addressed. The encryption methods used for databases and backup systems appear to be outdated, which can increase the risk of unauthorized access or data breaches. Additionally, there is no centralized key management in place, further increasing security risks. Although some file shares are not encrypted, it is unclear from the provided evidence if all fileshares fall under this category. Given these observations and the insufficient coverage score of the evidence, I conclude that the control requirement is not fully compliant.",
+        "evidence_gaps": [
+          "Evidence of monitoring, testing, and validation of encryption implementations is missing.",
+          "Incident response procedures related to data-at-rest protection are not provided."
+        ]
+      }
+    }
+  ],
+  "metrics": {
+    "pass_rate": 0.5,
+    "average_accuracy": 0.7,
+    "compliance_accuracy": 1.0,
+    "risk_level_accuracy": 0.5,
+    "findings_quality": 0.5,
+    "total_tests": 2,
+    "passed_tests": 1
+  }
+}

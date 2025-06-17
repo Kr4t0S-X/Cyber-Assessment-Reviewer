@@ -33,7 +33,7 @@ class RiskLevel(Enum):
 
 @dataclass
 class AssessmentResult:
-    """Data class for individual control assessment results"""
+    """Data class for individual control assessment results with enhanced analysis fields"""
     control_id: str
     control_name: str
     requirement: str
@@ -46,6 +46,17 @@ class AssessmentResult:
     remediation: List[str]
     evidence_references: List[str]
     confidence_score: float
+    # Enhanced fields for better analysis
+    technical_details: List[str] = None
+    compliance_rationale: str = ""
+    evidence_gaps: List[str] = None
+
+    def __post_init__(self):
+        """Initialize optional fields if not provided"""
+        if self.technical_details is None:
+            self.technical_details = []
+        if self.evidence_gaps is None:
+            self.evidence_gaps = []
     
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary for JSON serialization"""

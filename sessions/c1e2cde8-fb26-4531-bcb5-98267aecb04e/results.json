@@ -6,21 +6,79 @@
       "requirement": "N/A",
       "supplier_answer": "Access control policies are documented in the \"Information Security Policy\" document, reviewed annually, and available to all employees on the company intranet.",
       "evidence_validity": "Partially Valid",
-      "compliance_status": "Compliant (temporarily)",
+      "compliance_status": "Partially Compliant",
       "risk_level": "Medium",
       "key_findings": [
-        "Access control policies are documented and reviewed annually but the implementation status is unknown"
+        "Access control policies are documented in the 'Information Security Policy' document.",
+        "The policy is reviewed annually and available on the company intranet."
       ],
       "risks": [
-        "Unverified access controls"
+        "There is no evidence that the policy is consistently enforced or audited",
+        "No information was provided about incident response procedures, training programs, or monitoring capabilities"
       ],
       "remediation": [
-        "Confirm access control policy implementation status",
-        "Ensure all employees have proper access rights",
-        "Implement monitoring and enforcement mechanisms for access controls"
+        "Implement regular audits and enforcement of access control policies.",
+        "Provide training on access control policies to all employees.",
+        "Ensure incident response procedures are in place and documented."
       ],
-      "evidence_references": [],
-      "confidence_score": 0.6
+      "evidence_references": [
+        "Enhanced_Evidence_AC-1 - Relevant_Evidence"
+      ],
+      "confidence_score": 0.505,
+      "technical_details": [
+        "No specific technical details were found in the provided evidence.",
+        "Evidence Quality Score: 0.00",
+        "Coverage Score: 0.00"
+      ],
+      "compliance_rationale": "Though a documented access control policy is available and annually reviewed, the lack of technical implementation details, monitoring and testing, and additional required supporting documentation indicate that this control is only partially compliant with NIST Cybersecurity Framework requirements. The associated risks are medium, as unenforced policies can lead to potential security vulnerabilities.",
+      "evidence_gaps": [
+        "Missing evidence of technical configuration related to access control",
+        "No documentation about monitoring, logging, or validation capabilities",
+        "Low evidence quality detected",
+        "Insufficient evidence coverage of control requirements"
+      ]
+    },
+    {
+      "control_id": "DE.CM-1",
+      "control_name": "Network Monitoring",
+      "requirement": "N/A",
+      "supplier_answer": "A Security Information and Event Management (SIEM) system is in place, collecting logs from critical systems. Alerts are configured for suspicious activities and monitored 24/7 by the security team.",
+      "evidence_validity": "Partially Valid",
+      "compliance_status": "Partially Compliant",
+      "risk_level": "High",
+      "key_findings": [
+        "SIEM system in place for network monitoring",
+        "24/7 monitoring by security team",
+        "Alerts configured for suspicious activities"
+      ],
+      "risks": [
+        "Evidence of incident response procedures not provided",
+        "Training and awareness programs seem incomplete",
+        "Risk assessment documentation appears missing or inadequate"
+      ],
+      "remediation": [
+        "Provide documentation for incident response procedures",
+        "Ensure complete training and awareness programs are in place",
+        "Develop and document risk assessments for all critical systems"
+      ],
+      "evidence_references": [
+        "Enhanced_Evidence_DE.CM-1 - Relevant_Evidence"
+      ],
+      "confidence_score": 0.43285714285714283,
+      "technical_details": [
+        "SIEM system configured to collect logs from critical systems",
+        "Security team monitors alerts for suspicious activities 24/7",
+        "Evidence Quality Score: 0.00",
+        "Coverage Score: 0.00"
+      ],
+      "compliance_rationale": "While there is evidence that a SIEM system is in place and being used for network monitoring, the quality and coverage of the provided evidence suggest implementation gaps. The absence of supporting documentation for incident response procedures, training and awareness programs, and risk assessments indicates that the control requirement has not been fully addressed. As a result, the security posture remains at high risk.",
+      "evidence_gaps": [
+        "Incident response procedures documentation",
+        "Training and awareness programs documentation",
+        "Risk assessment documentation",
+        "Low evidence quality detected",
+        "Insufficient evidence coverage of control requirements"
+      ]
     },
     {
       "control_id": "PR.IP-1",
@@ -31,40 +89,36 @@
       "compliance_status": "Non-Compliant",
       "risk_level": "High",
       "key_findings": [
-        "Baseline configurations exist but are not up-to-date with latest OS and application patches"
+        "Baseline configurations for servers and employee workstations exist but are not updated with the latest OS and application patches.",
+        "Network device baselines are not established."
       ],
       "risks": [
-        "Exposure to known vulnerabilities due to outdated systems",
-        "Lack of network device baseline configuration"
+        "Vulnerabilities in outdated operating systems and applications could be exploited by attackers.",
+        "Lack of network device baselines increases the risk of misconfigurations and unauthorized access.",
+        "The overall security posture may be weakened due to these non-compliant configurations."
       ],
       "remediation": [
-        "Update existing server and workstation configurations with latest patches",
-        "Establish network device baselines",
-        "Implement a regular patch management process"
+        "Update existing baseline configurations for servers and employee workstations with the latest OS and application patches.",
+        "Establish network device baselines and ensure they are regularly updated.",
+        "Implement a patch management system to automate the update process."
       ],
-      "evidence_references": [],
-      "confidence_score": 0.6
-    },
-    {
-      "control_id": "DE.CM-1",
-      "control_name": "Network Monitoring",
-      "requirement": "N/A",
-      "supplier_answer": "A Security Information and Event Management (SIEM) system is in place, collecting logs from critical systems. Alerts are configured for suspicious activities and monitored 24/7 by the security team.",
-      "evidence_validity": "Partially Valid",
-      "compliance_status": "Partially Compliant",
-      "risk_level": "Medium",
-      "key_findings": [
-        "SIEM system is in place but implementation status is unknown"
+      "evidence_references": [
+        "Enhanced_Evidence_PR.IP-1 - Relevant_Evidence"
       ],
-      "risks": [
-        "Potential lack of continuous monitoring for non-critical systems if they are not covered by the SIEM setup"
+      "confidence_score": 0.46142857142857135,
+      "technical_details": [
+        "Outdated operating systems detected: Windows Server 2012 R2 and macOS High Sierra.",
+        "Unpatched applications identified: Java SE 8, Adobe Acrobat DC (version 2015.006.30418) on servers.",
+        "Evidence Quality Score: 0.00",
+        "Coverage Score: 0.00"
       ],
-      "remediation": [
-        "Confirm complete deployment and proper configuration of SIEM across all critical and non-critical systems",
-        "Ensure 24/7 monitoring of alerts by the security team"
-      ],
-      "evidence_references": [],
-      "confidence_score": 0.6
+      "compliance_rationale": "The provided evidence shows that baseline configurations exist for servers and employee workstations, but they are not updated with the latest OS and application patches as required by PR.IP-1. This non-compliance increases the risk of vulnerabilities being exploited by attackers. The lack of network device baselines also poses a significant security risk. Although the evidence provided is not comprehensive, it indicates that the control is not fully implemented, resulting in a high risk level and a 'Non-Compliant' status.",
+      "evidence_gaps": [
+        "Evidence of testing, monitoring, and validation of the implemented baseline configurations is missing.",
+        "Incident response procedures related to non-compliant configurations are not provided.",
+        "Low evidence quality detected",
+        "Insufficient evidence coverage of control requirements"
+      ]
     },
     {
       "control_id": "RS.RP-1",
@@ -75,19 +129,35 @@
       "compliance_status": "Partially Compliant",
       "risk_level": "Medium",
       "key_findings": [
-        "The Incident Response Plan's implementation status is not provided.",
-        "Documentation and testing are in place, but actual implementation remains uncertain."
+        "The Incident Response Plan is documented",
+        "Quarterly tabletop exercises are conducted to test the plan's effectiveness"
       ],
       "risks": [
-        "Unclear incident response actions during a real event",
-        "Potential lack of immediate response due to uncertainty in the plan's implementation"
+        "The plan lacks specific details regarding roles and responsibilities beyond those stated",
+        "Communication protocols within the plan require improvement"
       ],
       "remediation": [
-        "Obtain verification of Incident Response Plan implementation status.",
-        "Ensure regular and consistent testing of the Incident Response Plan outside of tabletop exercises."
+        "Revise the Incident Response Plan to include detailed roles, responsibilities, and communication protocols",
+        "Conduct a thorough review of the existing tabletop exercises and tailor them to address identified gaps in the response plan",
+        "Ensure that training and awareness programs are updated to reflect changes in the incident response procedures"
       ],
-      "evidence_references": [],
-      "confidence_score": 0.6
+      "evidence_references": [
+        "Enhanced_Evidence_RS.RP-1 - Relevant_Evidence"
+      ],
+      "confidence_score": 0.43285714285714283,
+      "technical_details": [
+        "The plan is documented but lacks specificity in roles and communication protocols",
+        "Tabletop exercises are conducted, but their effectiveness remains unverified without access to their results or follow-up actions",
+        "Evidence Quality Score: 0.00",
+        "Coverage Score: 0.00"
+      ],
+      "compliance_rationale": "While the supplier claims implementation of the Incident Response Plan and quarterly tabletop exercises, the evidence provided does not demonstrate a fully compliant status. The plan lacks specific details regarding roles and responsibilities beyond those stated, and communication protocols within the plan require improvement. Additionally, there is a gap in evidence related to risk assessment and monitoring and logging capabilities.",
+      "evidence_gaps": [
+        "Missing evidence of risk assessment related to the Incident Response Plan",
+        "No evidence provided regarding monitoring and logging capabilities for incident detection",
+        "Low evidence quality detected",
+        "Insufficient evidence coverage of control requirements"
+      ]
     },
     {
       "control_id": "RC.RP-1",
@@ -96,60 +166,83 @@
       "supplier_answer": "A disaster recovery plan exists for critical systems, with data backed up to a secondary site. However, the last full recovery test was over a year ago, and the documented Recovery Time Objective (RTO) was not met.",
       "evidence_validity": "Partially Valid",
       "compliance_status": "Non-Compliant",
-      "risk_level": "High",
+      "risk_level": "Critical",
       "key_findings": [
-        "Disaster recovery plan exists but last full test was over a year ago",
-        "RTO not met"
+        "Disaster recovery plan exists for critical systems",
+        "Data backup to a secondary site is in place",
+        "Last full recovery test was over a year ago"
       ],
       "risks": [
-        "Data loss or downtime due to system failure",
-        "Lack of confidence in disaster recovery process"
+        "RTO not met during last recovery test",
+        "Lack of recent testing increases the risk of system downtime",
+        "Critical systems may be vulnerable to extended outages in case of disaster"
       ],
       "remediation": [
-        "Regularly conduct full disaster recovery tests",
-        "Update Recovery Time Objective based on testing results"
+        "Schedule regular (quarterly) full recovery tests and document results",
+        "Update the Recovery Time Objective based on test results and system dependencies",
+        "Assess and prioritize critical systems for faster recovery in case of disaster"
       ],
-      "evidence_references": [],
-      "confidence_score": 0.6
+      "evidence_references": [
+        "Enhanced_Evidence_RC.RP-1 - Relevant_Evidence"
+      ],
+      "confidence_score": 0.32142857142857145,
+      "technical_details": [
+        "Last recovery test date mentioned: YYYY-MM-DD",
+        "RTO specified in the disaster recovery plan: HH:MM",
+        "Evidence Quality Score: 0.00",
+        "Coverage Score: 0.00"
+      ],
+      "compliance_rationale": "While a disaster recovery plan exists and data is backed up, the non-meeting of RTO during the last test indicates that the supplier's implementation is not technically sound or effective. The critical nature of this control necessitates immediate action for regular testing to ensure readiness in case of disaster.",
+      "evidence_gaps": [
+        "Evidence of recovery testing since the last documented test is missing",
+        "Low evidence quality detected",
+        "Insufficient evidence coverage of control requirements"
+      ]
     }
   ],
   "risk_metrics": {
-    "overall_risk_score": 52.0,
+    "overall_risk_score": 64.0,
     "risk_distribution": {
-      "Critical": 0,
+      "Critical": 1,
       "High": 2,
-      "Medium": 3,
+      "Medium": 2,
       "Low": 0,
       "Unknown": 0
     },
     "compliance_distribution": {
       "Compliant": 0,
-      "Partially Compliant": 2,
+      "Partially Compliant": 3,
       "Non-Compliant": 2,
-      "Unknown": 0,
-      "Compliant (temporarily)": 1
+      "Unknown": 0
     },
     "compliance_percentage": 0.0,
     "high_priority_controls": [
+      {
+        "control_id": "RC.RP-1",
+        "control_name": "Recovery Planning",
+        "risk_level": "Critical",
+        "compliance_status": "Non-Compliant",
+        "confidence_score": 0.32142857142857145
+      },
       {
         "control_id": "PR.IP-1",
         "control_name": "Baseline Configuration",
         "risk_level": "High",
         "compliance_status": "Non-Compliant",
-        "confidence_score": 0.6
+        "confidence_score": 0.46142857142857135
       },
       {
-        "control_id": "RC.RP-1",
-        "control_name": "Recovery Planning",
+        "control_id": "DE.CM-1",
+        "control_name": "Network Monitoring",
         "risk_level": "High",
-        "compliance_status": "Non-Compliant",
-        "confidence_score": 0.6
+        "compliance_status": "Partially Compliant",
+        "confidence_score": 0.43285714285714283
       }
     ],
     "total_controls_assessed": 5
   },
   "framework": "NIST",
-  "timestamp": "2025-06-17T01:58:17.684072",
+  "timestamp": "2025-06-17T02:35:49.545533",
   "total_controls": 5,
   "analyzed_controls": 5
 }

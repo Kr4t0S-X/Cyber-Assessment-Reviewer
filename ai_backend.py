@@ -12,6 +12,7 @@ from typing import Dict, Any, List, Optional
 
 from models import AssessmentResult, ControlData, RiskMetrics
 from config import Config
+from ai_validation import AIResponseValidator
 
 logger = logging.getLogger(__name__)
 
@@ -230,15 +231,18 @@ class CyberAssessmentReviewer:
         self.config = config or Config()
         self.model_name = model_name or self.config.DEFAULT_MODEL_NAME
         self.use_ollama = use_ollama if use_ollama is not None else self.config.USE_OLLAMA
-        
+
         logger.info("Initializing Cyber Assessment Reviewer")
-        
+
         # Initialize AI backend
         self.backend = self._initialize_backend()
-        
+
         if not self.backend or not self.backend.is_available():
             raise RuntimeError("No AI backend available. Please install Ollama or transformers library.")
-        
+
+        # Initialize response validator
+        self.validator = AIResponseValidator()
+
         logger.info("Model initialization complete")
     
     def _initialize_backend(self) -> Optional[AIBackend]:
@@ -266,43 +270,168 @@ class CyberAssessmentReviewer:
         return None
 
     def create_cyber_prompt(self, control: ControlData, evidence_text: str, framework: str = "NIST") -> str:
-        """Create specialized prompt for cyber assessment analysis"""
+        """Create specialized prompt for cyber assessment analysis with enhanced cybersecurity focus"""
         framework_name = self.config.FRAMEWORKS.get(framework, framework)
 
-        prompt = f"""You are a senior cybersecurity compliance auditor reviewing control assessments.
-Analyze the following control against the provided evidence using the {framework_name} framework.
+        # Get framework-specific guidance
+        framework_guidance = self._get_framework_guidance(framework)
 
-CONTROL INFORMATION:
-- Control ID: {control.control_id}
-- Control Name: {control.control_name}
-- Requirement: {control.requirement}
-- Supplier Answer: {control.answer}
-- Implementation Status: {control.status or 'Unknown'}
+        prompt = f"""You are a senior cybersecurity compliance auditor with 15+ years of experience in {framework_name} assessments.
+Your role is to conduct a thorough, evidence-based analysis of cybersecurity control implementations.
 
-EVIDENCE PROVIDED:
-{evidence_text[:3000]}
+=== ASSESSMENT CONTEXT ===
+Framework: {framework_name}
+Control ID: {control.control_id}
+Control Name: {control.control_name}
+Control Requirement: {control.requirement}
+Supplier's Claimed Implementation: {control.answer}
+Declared Status: {control.status or 'Unknown'}
 
-Provide your analysis in the following JSON format:
+=== FRAMEWORK-SPECIFIC GUIDANCE ===
+{framework_guidance}
+
+=== EVIDENCE TO ANALYZE ===
+{evidence_text[:4000]}
+
+=== ANALYSIS METHODOLOGY ===
+Follow this systematic approach:
+
+1. EVIDENCE EVALUATION:
+   - Identify what evidence is provided vs. what is required
+   - Assess the quality, completeness, and relevance of evidence
+   - Look for specific technical details, configurations, procedures
+   - Check for evidence of testing, monitoring, and validation
+
+2. CONTROL IMPLEMENTATION ASSESSMENT:
+   - Does the evidence demonstrate the control is actually implemented?
+   - Are all aspects of the control requirement addressed?
+   - Is the implementation technically sound and effective?
+   - Are there any implementation gaps or weaknesses?
+
+3. RISK ANALYSIS:
+   - What are the specific security risks if this control fails?
+   - How critical is this control to overall security posture?
+   - What is the potential business impact of non-compliance?
+   - Are there compensating controls that mitigate risks?
+
+4. COMPLIANCE DETERMINATION:
+   - Based on evidence quality and implementation effectiveness
+   - Consider both technical implementation and operational maturity
+   - Account for any identified gaps or weaknesses
+
+=== REQUIRED OUTPUT FORMAT ===
+Provide your analysis in this exact JSON format:
 {{
     "evidence_validity": "Valid|Partially Valid|Invalid|No Evidence",
     "compliance_status": "Compliant|Partially Compliant|Non-Compliant",
     "risk_level": "Critical|High|Medium|Low",
     "confidence_score": 0.0-1.0,
-    "key_findings": ["finding1", "finding2", "finding3"],
-    "identified_risks": ["risk1", "risk2", "risk3"],
-    "remediation_steps": ["step1", "step2", "step3"],
-    "evidence_gaps": ["gap1", "gap2"]
+    "key_findings": ["specific finding 1", "specific finding 2", "specific finding 3"],
+    "identified_risks": ["specific risk 1", "specific risk 2", "specific risk 3"],
+    "remediation_steps": ["actionable step 1", "actionable step 2", "actionable step 3"],
+    "evidence_gaps": ["missing evidence 1", "missing evidence 2"],
+    "technical_details": ["technical observation 1", "technical observation 2"],
+    "compliance_rationale": "Detailed explanation of compliance determination based on evidence"
 }}
 
-Focus on:
-1. Whether evidence adequately demonstrates the control implementation
-2. Specific security vulnerabilities or compliance gaps
-3. Practical, prioritized remediation recommendations
-4. Risk impact on the organization
+=== CRITICAL REQUIREMENTS ===
+- Base ALL conclusions on specific evidence provided
+- Identify SPECIFIC technical details, not generic statements
+- Provide ACTIONABLE remediation steps with clear priorities
+- Explain WHY you reached each conclusion
+- If evidence is insufficient, clearly state what additional evidence is needed
+- Consider the BUSINESS CONTEXT and risk impact
+- Be PRECISE about what was observed vs. what was claimed
 
-Provide only the JSON response without additional text."""
+Provide ONLY the JSON response without additional text or formatting."""
 
         return prompt
+
+    def _get_framework_guidance(self, framework: str) -> str:
+        """Get framework-specific guidance for analysis"""
+        guidance = {
+            "NIST": """
+NIST Cybersecurity Framework Focus Areas:
+- IDENTIFY: Asset management, governance, risk assessment
+- PROTECT: Access control, data security, protective technology
+- DETECT: Anomaly detection, continuous monitoring
+- RESPOND: Response planning, communications, analysis
+- RECOVER: Recovery planning, improvements, communications
+
+Key Evidence Types to Look For:
+- Policies and procedures documentation
+- Technical configuration evidence
+- Monitoring and logging capabilities
+- Incident response procedures
+- Training and awareness programs
+- Risk assessment documentation
+""",
+            "ISO27001": """
+ISO 27001:2022 Focus Areas:
+- Information Security Management System (ISMS)
+- Risk management processes
+- Security controls implementation (Annex A)
+- Continuous improvement and monitoring
+- Management commitment and responsibility
+
+Key Evidence Types to Look For:
+- ISMS documentation and scope
+- Risk assessment and treatment plans
+- Security policies and procedures
+- Control implementation evidence
+- Internal audit results
+- Management review records
+""",
+            "SOC2": """
+SOC 2 Trust Service Criteria:
+- Security: Protection against unauthorized access
+- Availability: System operation and usability
+- Processing Integrity: Complete, valid, accurate processing
+- Confidentiality: Information designated as confidential
+- Privacy: Personal information collection, use, retention
+
+Key Evidence Types to Look For:
+- System descriptions and boundaries
+- Control design documentation
+- Operating effectiveness evidence
+- Monitoring and testing results
+- Exception reports and remediation
+- Third-party assessments
+""",
+            "CIS": """
+CIS Controls v8 Implementation Groups:
+- IG1: Basic cyber hygiene (6 controls)
+- IG2: Risk-driven security program (16 controls)
+- IG3: Advanced security program (18 controls)
+
+Key Evidence Types to Look For:
+- Asset inventory and management
+- Software and hardware configurations
+- Access control implementations
+- Security awareness training
+- Vulnerability management processes
+- Incident response capabilities
+""",
+            "PCI-DSS": """
+PCI DSS v4.0 Requirements:
+- Build and maintain secure networks
+- Protect cardholder data
+- Maintain vulnerability management
+- Implement strong access controls
+- Monitor and test networks
+- Maintain information security policy
+
+Key Evidence Types to Look For:
+- Network segmentation evidence
+- Encryption implementation
+- Access control matrices
+- Vulnerability scan results
+- Log monitoring configurations
+- Security testing results
+"""
+        }
+
+        return guidance.get(framework, "General cybersecurity best practices and evidence-based assessment.")
 
     def parse_llm_response(self, response: str) -> Dict[str, Any]:
         """Parse and validate LLM JSON response"""
@@ -313,7 +442,7 @@ Provide only the JSON response without additional text."""
                 json_str = json_match.group()
                 result = json.loads(json_str)
 
-                # Ensure all required fields exist
+                # Ensure all required fields exist with enhanced validation
                 default_result = {
                     "evidence_validity": "Invalid",
                     "compliance_status": "Non-Compliant",
@@ -322,7 +451,9 @@ Provide only the JSON response without additional text."""
                     "key_findings": [],
                     "identified_risks": [],
                     "remediation_steps": [],
-                    "evidence_gaps": []
+                    "evidence_gaps": [],
+                    "technical_details": [],
+                    "compliance_rationale": "Unable to determine compliance due to parsing error"
                 }
 
                 # Merge with defaults
@@ -375,7 +506,7 @@ Provide only the JSON response without additional text."""
             # Parse response
             parsed = self.parse_llm_response(generated_text)
 
-            # Create AssessmentResult
+            # Create AssessmentResult with enhanced fields
             result = AssessmentResult(
                 control_id=control.control_id,
                 control_name=control.control_name,
@@ -388,8 +519,27 @@ Provide only the JSON response without additional text."""
                 risks=parsed.get('identified_risks', [])[:3],
                 remediation=parsed.get('remediation_steps', [])[:3],
                 evidence_references=evidence_references[:3],
-                confidence_score=float(parsed.get('confidence_score', 0.5))
+                confidence_score=float(parsed.get('confidence_score', 0.5)),
+                technical_details=parsed.get('technical_details', [])[:5],
+                compliance_rationale=parsed.get('compliance_rationale', ''),
+                evidence_gaps=parsed.get('evidence_gaps', [])[:3]
             )
+
+            # Validate the AI response
+            validation_result = self.validator.validate_response(result, evidence_text, control)
+
+            # Adjust confidence score based on validation
+            result.confidence_score *= validation_result.confidence_adjustment
+
+            # Log validation issues if any
+            if validation_result.validation_issues:
+                logger.warning(f"Validation issues for control {control.control_id}: {validation_result.validation_issues}")
+
+            # Add validation quality to technical details
+            if validation_result.quality_score < 0.7:
+                result.technical_details.append(f"AI Response Quality Score: {validation_result.quality_score:.2f}")
+                if validation_result.recommendations:
+                    result.technical_details.extend(validation_result.recommendations[:2])
 
             return result
 

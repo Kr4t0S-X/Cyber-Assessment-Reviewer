@@ -1,12 +1,14 @@
 """
 File processing module for Cyber Assessment Reviewer
 Handles extraction of text from various file formats (PDF, DOCX, XLSX, PPTX)
+with enhanced cybersecurity-focused text processing and evidence categorization
 """
 
 import logging
 import pandas as pd
+import re
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Tuple
 import PyPDF2
 from docx import Document
 from pptx import Presentation
@@ -15,6 +17,109 @@ from models import EvidenceFile, ControlData
 from config import Config
 
 logger = logging.getLogger(__name__)
+
+class CybersecurityTextProcessor:
+    """Enhanced text processing for cybersecurity evidence analysis"""
+
+    # Cybersecurity-relevant keywords and patterns
+    SECURITY_KEYWORDS = {
+        'access_control': [
+            'access control', 'authentication', 'authorization', 'rbac', 'role-based',
+            'multi-factor', 'mfa', '2fa', 'single sign-on', 'sso', 'privileged access',
+            'least privilege', 'segregation of duties', 'password policy'
+        ],
+        'encryption': [
+            'encryption', 'encrypted', 'cryptography', 'ssl', 'tls', 'aes', 'rsa',
+            'certificate', 'key management', 'pki', 'hash', 'digital signature'
+        ],
+        'monitoring': [
+            'monitoring', 'logging', 'audit trail', 'siem', 'log analysis',
+            'intrusion detection', 'ids', 'ips', 'security monitoring', 'alerting'
+        ],
+        'vulnerability': [
+            'vulnerability', 'patch management', 'security updates', 'penetration test',
+            'vulnerability scan', 'security assessment', 'risk assessment'
+        ],
+        'incident_response': [
+            'incident response', 'incident management', 'security incident',
+            'breach response', 'forensics', 'containment', 'recovery'
+        ],
+        'compliance': [
+            'compliance', 'audit', 'policy', 'procedure', 'standard', 'guideline',
+            'framework', 'control', 'requirement', 'documentation'
+        ],
+        'network_security': [
+            'firewall', 'network security', 'segmentation', 'dmz', 'vpn',
+            'network access control', 'nac', 'perimeter security'
+        ],
+        'data_protection': [
+            'data protection', 'data classification', 'data loss prevention', 'dlp',
+            'backup', 'data retention', 'data disposal', 'privacy'
+        ]
+    }
+
+    @classmethod
+    def categorize_text_by_security_domain(cls, text: str) -> Dict[str, List[str]]:
+        """Categorize text content by cybersecurity domains"""
+        categorized = {domain: [] for domain in cls.SECURITY_KEYWORDS.keys()}
+
+        # Split text into sentences for better context
+        sentences = re.split(r'[.!?]+', text)
+
+        for sentence in sentences:
+            sentence = sentence.strip().lower()
+            if len(sentence) < 10:  # Skip very short sentences
+                continue
+
+            for domain, keywords in cls.SECURITY_KEYWORDS.items():
+                if any(keyword in sentence for keyword in keywords):
+                    categorized[domain].append(sentence.strip())
+
+        # Remove empty categories
+        return {k: v for k, v in categorized.items() if v}
+
+    @classmethod
+    def extract_technical_details(cls, text: str) -> List[str]:
+        """Extract technical details and configurations from text"""
+        technical_patterns = [
+            r'(?i)(configured?|implemented?|enabled?|disabled?)\s+[^.]{10,100}',
+            r'(?i)(version|v\d+\.\d+|build\s+\d+)[^.]{5,50}',
+            r'(?i)(port\s+\d+|protocol\s+\w+|algorithm\s+\w+)',
+            r'(?i)(certificate|key\s+length|bit\s+encryption)',
+            r'(?i)(frequency|interval|threshold|timeout)[^.]{5,50}',
+            r'(?i)(server|system|application|database)[^.]{10,100}'
+        ]
+
+        technical_details = []
+        for pattern in technical_patterns:
+            matches = re.findall(pattern, text)
+            technical_details.extend([match if isinstance(match, str) else ' '.join(match)
+                                    for match in matches])
+
+        return list(set(technical_details))  # Remove duplicates
+
+    @classmethod
+    def identify_evidence_types(cls, text: str) -> List[str]:
+        """Identify types of evidence present in the text"""
+        evidence_patterns = {
+            'policy_document': [r'(?i)policy', r'(?i)procedure', r'(?i)standard', r'(?i)guideline'],
+            'configuration': [r'(?i)config', r'(?i)setting', r'(?i)parameter', r'(?i)option'],
+            'log_data': [r'(?i)log', r'(?i)event', r'(?i)timestamp', r'(?i)audit trail'],
+            'test_results': [r'(?i)test', r'(?i)scan', r'(?i)assessment', r'(?i)validation'],
+            'training_material': [r'(?i)training', r'(?i)awareness', r'(?i)education', r'(?i)course'],
+            'certificate': [r'(?i)certificate', r'(?i)certification', r'(?i)accreditation'],
+            'screenshot': [r'(?i)screenshot', r'(?i)image', r'(?i)figure', r'(?i)diagram'],
+            'report': [r'(?i)report', r'(?i)analysis', r'(?i)findings', r'(?i)summary']
+        }
+
+        identified_types = []
+        text_lower = text.lower()
+
+        for evidence_type, patterns in evidence_patterns.items():
+            if any(re.search(pattern, text_lower) for pattern in patterns):
+                identified_types.append(evidence_type)
+
+        return identified_types
 
 class FileProcessor:
     """Base class for file processors"""
@@ -27,55 +132,113 @@ class FileProcessor:
         raise NotImplementedError("Subclasses must implement process_file method")
 
 class PDFProcessor(FileProcessor):
-    """Processor for PDF files"""
-    
+    """Enhanced processor for PDF files with cybersecurity-focused analysis"""
+
     def process_file(self, filepath: str) -> Dict[str, str]:
-        """Extract text from PDF file with page references"""
-        pages_text = {}
+        """Extract text from PDF file with enhanced cybersecurity analysis"""
+        processed_sections = {}
         try:
             with open(filepath, 'rb') as file:
                 pdf_reader = PyPDF2.PdfReader(file)
                 num_pages = min(len(pdf_reader.pages), self.config.MAX_PAGES_PDF)
-                
+
+                all_text = ""
+                page_texts = {}
+
+                # Extract text from all pages
                 for page_num in range(num_pages):
                     page = pdf_reader.pages[page_num]
                     text = page.extract_text()
                     if text.strip():
-                        pages_text[f"Page {page_num + 1}"] = text[:self.config.MAX_TEXT_LENGTH_PER_SECTION]
-                        
+                        page_texts[f"Page {page_num + 1}"] = text
+                        all_text += f"\n{text}"
+
+                # Categorize content by security domains
+                security_categories = CybersecurityTextProcessor.categorize_text_by_security_domain(all_text)
+
+                # Add categorized sections
+                for domain, sentences in security_categories.items():
+                    if sentences:
+                        domain_text = '. '.join(sentences[:10])  # Limit to top 10 sentences
+                        processed_sections[f"Security Domain - {domain.replace('_', ' ').title()}"] = domain_text[:self.config.MAX_TEXT_LENGTH_PER_SECTION]
+
+                # Add technical details section
+                technical_details = CybersecurityTextProcessor.extract_technical_details(all_text)
+                if technical_details:
+                    processed_sections["Technical Details"] = '. '.join(technical_details[:5])[:self.config.MAX_TEXT_LENGTH_PER_SECTION]
+
+                # Add evidence type identification
+                evidence_types = CybersecurityTextProcessor.identify_evidence_types(all_text)
+                if evidence_types:
+                    processed_sections["Evidence Types"] = f"Identified evidence types: {', '.join(evidence_types)}"
+
+                # Add original page-based sections (limited)
+                for page_name, page_text in list(page_texts.items())[:3]:  # Limit to first 3 pages
+                    processed_sections[f"Original - {page_name}"] = page_text[:self.config.MAX_TEXT_LENGTH_PER_SECTION]
+
         except Exception as e:
             logger.error(f"Error reading PDF {filepath}: {e}")
             return {"Error": f"Failed to read PDF: {str(e)}"}
-        
-        return pages_text
+
+        return processed_sections
 
 class DOCXProcessor(FileProcessor):
-    """Processor for DOCX files"""
-    
+    """Enhanced processor for DOCX files with cybersecurity-focused analysis"""
+
     def process_file(self, filepath: str) -> Dict[str, str]:
-        """Extract text from DOCX file with section references"""
-        sections_text = {}
+        """Extract text from DOCX file with enhanced cybersecurity analysis"""
+        processed_sections = {}
         try:
             doc = Document(filepath)
-            
-            # Extract paragraphs
+
+            # Extract all text content
             full_text = []
+            headings = []
+
             for paragraph in doc.paragraphs:
                 if paragraph.text.strip():
+                    # Check if it's a heading
+                    if paragraph.style.name.startswith('Heading'):
+                        headings.append(paragraph.text.strip())
                     full_text.append(paragraph.text)
-            
-            # Group into sections
+
+            all_text = '\n'.join(full_text)
+
+            # Add document structure information
+            if headings:
+                processed_sections["Document Structure"] = f"Document headings: {'; '.join(headings[:10])}"
+
+            # Categorize content by security domains
+            security_categories = CybersecurityTextProcessor.categorize_text_by_security_domain(all_text)
+
+            # Add categorized sections
+            for domain, sentences in security_categories.items():
+                if sentences:
+                    domain_text = '. '.join(sentences[:8])  # Limit to top 8 sentences
+                    processed_sections[f"Security Domain - {domain.replace('_', ' ').title()}"] = domain_text[:self.config.MAX_TEXT_LENGTH_PER_SECTION]
+
+            # Add technical details section
+            technical_details = CybersecurityTextProcessor.extract_technical_details(all_text)
+            if technical_details:
+                processed_sections["Technical Details"] = '. '.join(technical_details[:5])[:self.config.MAX_TEXT_LENGTH_PER_SECTION]
+
+            # Add evidence type identification
+            evidence_types = CybersecurityTextProcessor.identify_evidence_types(all_text)
+            if evidence_types:
+                processed_sections["Evidence Types"] = f"Identified evidence types: {', '.join(evidence_types)}"
+
+            # Add original content sections (limited)
             if full_text:
-                section_size = max(1, len(full_text) // 5)  # Divide into ~5 sections
-                for i in range(0, len(full_text), section_size):
+                section_size = max(1, len(full_text) // 3)  # Divide into ~3 sections
+                for i in range(0, min(len(full_text), section_size * 3), section_size):
                     section_text = '\n'.join(full_text[i:i+section_size])
-                    sections_text[f"Section {i//section_size + 1}"] = section_text[:self.config.MAX_TEXT_LENGTH_PER_SECTION]
-                    
+                    processed_sections[f"Original Section {i//section_size + 1}"] = section_text[:self.config.MAX_TEXT_LENGTH_PER_SECTION]
+
         except Exception as e:
             logger.error(f"Error reading DOCX {filepath}: {e}")
             return {"Error": f"Failed to read DOCX: {str(e)}"}
-        
-        return sections_text
+
+        return processed_sections
 
 class PPTXProcessor(FileProcessor):
     """Processor for PPTX files"""

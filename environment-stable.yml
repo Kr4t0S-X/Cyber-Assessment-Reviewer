@@ -5,35 +5,41 @@ channels:
 dependencies:
   # Core Python with specific version for stability
   - python=3.10.12
-
+  
   # Web Framework - stable versions
   - flask=2.3.3
   - werkzeug=2.3.7
-
+  
   # Data Processing - stable versions
   - pandas=2.0.3
   - numpy=1.24.4
   - openpyxl=3.1.2
-
+  
   # HTTP Requests
   - requests=2.31.0
-
+  
+  # Document Processing - use pip for better compatibility
+  # - python-docx  # Move to pip
+  # - pypdf2       # Move to pip  
+  # - python-pptx  # Move to pip
+  
   # Machine Learning - stable versions
   - scikit-learn=1.3.0
-
+  
   # PyTorch - CPU version for better compatibility
   - pytorch=2.0.1
   - cpuonly
-
-  # Data Visualization - stable versions
+  
+  # Transformers - install via pip for latest version
+  # - transformers  # Move to pip
+  
+  # Data Visualization - optional, stable versions
   - matplotlib=3.7.2
   - seaborn=0.12.2
-
+  
   # Development Tools
-  - jupyter=1.0.0
-  - ipykernel=6.25.0
   - pip=23.2.1
-
+  
   # Pip dependencies - packages not available or better via pip
   - pip:
     - transformers>=4.20.0

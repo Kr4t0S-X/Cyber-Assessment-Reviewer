@@ -36,15 +36,26 @@ FROM conda-base as env-builder
 # Copy conda environment specification
 COPY environment.yml .
 
-# Create conda environment using mamba for speed
-RUN mamba env create -f environment.yml && \
-    conda clean -afy && \
+# Create conda environment with error handling and fallback
+RUN echo "=== Creating conda environment ===" && \
+    mamba env create -f environment.yml || \
+    (echo "=== Mamba failed, trying conda ===" && \
+     conda env create -f environment.yml) || \
+    (echo "=== Both failed, trying step-by-step ===" && \
+     conda create -n ${CONDA_ENV_NAME} python=3.10 -y && \
+     conda install -n ${CONDA_ENV_NAME} -c conda-forge flask pandas numpy requests openpyxl scikit-learn matplotlib seaborn jupyter ipykernel -y && \
+     conda install -n ${CONDA_ENV_NAME} -c conda-forge python-docx pypdf2 python-pptx -y || echo "Document packages skipped" && \
+     conda install -n ${CONDA_ENV_NAME} -c pytorch pytorch cpuonly -y || echo "PyTorch skipped" && \
+     /opt/conda/envs/${CONDA_ENV_NAME}/bin/pip install transformers ollama || echo "Pip packages skipped")
+
+# Verify environment was created successfully
+RUN conda env list | grep ${CONDA_ENV_NAME} || (echo "Environment creation failed" && exit 1)
+
+# Clean up conda cache and unnecessary files
+RUN conda clean -afy && \
     find /opt/conda -follow -type f -name '*.a' -delete && \
     find /opt/conda -follow -type f -name '*.pyc' -delete && \
     find /opt/conda -follow -type f -name '*.js.map' -delete
-
-# Install pip-only packages in the conda environment
-RUN /opt/conda/envs/${CONDA_ENV_NAME}/bin/pip install --no-cache-dir ollama
 
 # Stage 3: Application builder
 FROM env-builder as app-builder
@@ -128,13 +139,12 @@ CMD ["python", "app.py"]
 FROM app-builder as development
 
 # Install development dependencies
-RUN /opt/conda/envs/${CONDA_ENV_NAME}/bin/mamba install -c conda-forge \
+RUN /opt/conda/envs/${CONDA_ENV_NAME}/bin/conda install -c conda-forge \
     pytest \
     black \
     flake8 \
-    mypy \
-    jupyter \
-    ipykernel
+    mypy -y || \
+    /opt/conda/envs/${CONDA_ENV_NAME}/bin/pip install pytest black flake8 mypy
 
 # Set development environment variables
 ENV FLASK_ENV=development \

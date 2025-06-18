@@ -1,0 +1,132 @@
+# Debug version of Dockerfile.conda with better error handling
+# Use this for troubleshooting conda environment creation issues
+
+# Stage 1: Base conda environment
+FROM continuumio/miniconda3:latest as conda-base
+
+# Set environment variables for conda
+ENV CONDA_ENV_NAME=cyber-assessment-env \
+    PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    CONDA_ALWAYS_YES=true \
+    CONDA_AUTO_UPDATE_CONDA=false
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    wget \
+    git \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
+
+# Update conda and install mamba for faster package resolution
+RUN conda update -n base -c defaults conda && \
+    conda install -n base -c conda-forge mamba
+
+# Create non-root user for security
+RUN groupadd -r appuser && useradd -r -g appuser appuser
+
+# Set working directory
+WORKDIR /app
+
+# Stage 2: Environment builder with debug output
+FROM conda-base as env-builder-debug
+
+# Copy conda environment specification
+COPY environment.yml .
+
+# Debug: Show environment file contents
+RUN echo "=== Environment.yml contents ===" && \
+    cat environment.yml && \
+    echo "=== End environment.yml ==="
+
+# Debug: Test conda/mamba availability
+RUN echo "=== Testing conda/mamba ===" && \
+    conda --version && \
+    mamba --version && \
+    echo "=== Conda info ===" && \
+    conda info
+
+# Create conda environment with verbose output and error handling
+RUN echo "=== Starting environment creation ===" && \
+    mamba env create -f environment.yml -v && \
+    echo "=== Environment created successfully ===" || \
+    (echo "=== Environment creation failed, trying alternatives ===" && \
+     echo "=== Trying with conda instead of mamba ===" && \
+     conda env create -f environment.yml -v) || \
+    (echo "=== Both mamba and conda failed, trying step-by-step ===" && \
+     conda create -n ${CONDA_ENV_NAME} python=3.10 -y && \
+     conda activate ${CONDA_ENV_NAME} && \
+     conda install -n ${CONDA_ENV_NAME} -c conda-forge flask pandas numpy requests -y)
+
+# Verify environment was created
+RUN echo "=== Verifying environment ===" && \
+    conda env list && \
+    conda list -n ${CONDA_ENV_NAME}
+
+# Clean up (only if environment creation succeeded)
+RUN conda clean -afy && \
+    find /opt/conda -follow -type f -name '*.a' -delete && \
+    find /opt/conda -follow -type f -name '*.pyc' -delete && \
+    find /opt/conda -follow -type f -name '*.js.map' -delete
+
+# Stage 3: Alternative environment builder (fallback method)
+FROM conda-base as env-builder-fallback
+
+COPY environment.yml .
+
+# Create environment step by step for better error isolation
+RUN echo "=== Creating environment step by step ===" && \
+    conda create -n ${CONDA_ENV_NAME} python=3.10 -y
+
+# Install packages in groups
+RUN echo "=== Installing core packages ===" && \
+    conda install -n ${CONDA_ENV_NAME} -c conda-forge \
+    flask pandas numpy requests -y
+
+RUN echo "=== Installing document processing packages ===" && \
+    conda install -n ${CONDA_ENV_NAME} -c conda-forge \
+    python-docx openpyxl pypdf2 python-pptx -y || \
+    echo "Document packages failed, continuing..."
+
+RUN echo "=== Installing ML packages ===" && \
+    conda install -n ${CONDA_ENV_NAME} -c conda-forge \
+    transformers torch scikit-learn -y || \
+    echo "ML packages failed, continuing..."
+
+RUN echo "=== Installing visualization packages ===" && \
+    conda install -n ${CONDA_ENV_NAME} -c conda-forge \
+    matplotlib seaborn -y || \
+    echo "Visualization packages failed, continuing..."
+
+# Install pip packages
+RUN echo "=== Installing pip packages ===" && \
+    /opt/conda/envs/${CONDA_ENV_NAME}/bin/pip install ollama || \
+    echo "Pip packages failed, continuing..."
+
+# Clean up
+RUN conda clean -afy
+
+# Stage 4: Pip-only fallback (if conda completely fails)
+FROM python:3.10-slim as pip-fallback
+
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1
+
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    wget \
+    git \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements and install with pip
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Create non-root user
+RUN groupadd -r appuser && useradd -r -g appuser appuser

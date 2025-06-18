@@ -192,3 +192,80 @@ cython_debug/
 #  refer to https://docs.cursor.com/context/ignore-files
 .cursorignore
 .cursorindexingignore
+
+# Docker and Container Files
+*.tar
+*.tar.gz
+*.tar.bz2
+*.tar.xz
+*.img
+*.iso
+*.ova
+*.ovf
+*.vmdk
+*.vdi
+*.qcow2
+
+# Docker build cache and volumes
+.docker/
+docker-volumes/
+.dockerignore
+
+# Application Data Directories
+data/
+uploads/
+sessions/
+logs/
+models/
+ollama/
+
+# Build artifacts and temporary files
+build-log.txt
+*.log
+*.tmp
+*.temp
+temp/
+tmp/
+
+# Large model files and AI artifacts
+*.bin
+*.safetensors
+*.gguf
+*.ggml
+*.pt
+*.pth
+*.h5
+*.hdf5
+*.pkl
+*.pickle
+
+# Conda and package management
+conda-meta/
+.conda/
+.mamba/
+pkgs/
+envs/
+*.conda
+*.tar.bz2
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Backup files
+*.bak
+*.backup
+*.old
+*~

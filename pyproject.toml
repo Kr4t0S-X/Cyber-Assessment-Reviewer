@@ -1,0 +1,92 @@
+[project]
+name = "cyber-assessment-reviewer"
+version = "1.0.0"
+description = "AI-powered cybersecurity control analysis system"
+authors = [
+    {name = "Cyber Assessment Team"}
+]
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Information Technology",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Security",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+dependencies = [
+    # Core Web Framework
+    "flask>=3.0.0",
+    "werkzeug>=3.0.1",
+    
+    # Data Processing
+    "pandas>=2.1.4",
+    "numpy>=1.24.3",
+    "openpyxl>=3.1.2",
+    
+    # Document Processing
+    "PyPDF2>=3.0.1",
+    "python-docx>=1.1.0",
+    "python-pptx>=0.6.23",
+    
+    # HTTP and Networking
+    "requests>=2.31.0",
+    
+    # AI/ML Libraries
+    "torch>=2.1.0",
+    "transformers>=4.36.0",
+    "accelerate>=0.25.0",
+    "sentencepiece>=0.1.99",
+    "scipy>=1.11.4",
+    "safetensors>=0.4.1",
+    
+    # Production WSGI Servers
+    "waitress>=3.0.0",
+    "gunicorn>=21.2.0; sys_platform != 'win32'",
+    
+    # Optional Dependencies
+    "bitsandbytes>=0.41.3; sys_platform != 'win32'",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.3",
+    "pytest-cov>=4.1.0",
+    "black>=23.11.0",
+    "flake8>=6.1.0",
+    "mypy>=1.7.1",
+]
+
+[project.urls]
+Homepage = "https://github.com/cybersecurity/cyber-assessment-reviewer"
+Repository = "https://github.com/cybersecurity/cyber-assessment-reviewer"
+Issues = "https://github.com/cybersecurity/cyber-assessment-reviewer/issues"
+
+[project.scripts]
+cyber-assessment-reviewer = "app:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.black]
+line-length = 100
+target-version = ['py310']
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "--cov=. --cov-report=html --cov-report=term-missing"

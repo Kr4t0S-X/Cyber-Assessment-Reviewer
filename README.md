@@ -1,33 +1,191 @@
-# Cyber Assessment Reviewer - Modular Edition
+# Cyber Assessment Reviewer - Simplified Edition
 
-A modular, AI-powered cybersecurity control analysis system that helps organizations review and assess their cybersecurity controls against various compliance frameworks.
+A comprehensive, AI-powered cybersecurity control analysis system that helps organizations review and assess their cybersecurity controls against various compliance frameworks with advanced accuracy metrics, evidence analysis, and risk assessment capabilities.
 
-## 🚀 Features
+## 🚀 Key Features
 
 - **AI-Powered Analysis**: Uses Mistral 7B or other LLMs for intelligent control assessment
 - **Multiple Backends**: Supports both Ollama (recommended) and Transformers
 - **Framework Support**: NIST, ISO 27001, SOC 2, CIS Controls, PCI DSS
 - **File Processing**: Supports PDF, DOCX, XLSX, PPTX evidence files
-- **Risk Assessment**: Comprehensive risk scoring and compliance metrics
-- **Excel Reports**: Detailed analysis reports in Excel format
-- **Modular Architecture**: Clean, maintainable code structure
+- **Advanced Risk Assessment**: Dynamic risk scoring with contextual factors and interdependency analysis
+- **Enhanced Accuracy Engine**: Multi-dimensional accuracy scoring with framework-specific baselines
+- **Evidence Quality Analysis**: Sophisticated evidence review with completeness and relevance scoring
+- **Technical Findings Generation**: Detailed technical findings with specificity and actionability
+- **Excel Reports**: Comprehensive analysis reports in Excel format
+- **Modular Architecture**: Clean, maintainable code structure with enhanced components
+
+## ⚡ Quick Start (One-Command Setup)
+
+### Prerequisites
+- Python 3.10 or higher
+- Internet connection for dependency installation
+
+### Installation & Setup
+
+Choose your platform:
+
+#### 🐧 Linux/macOS
+```bash
+git clone <repository-url>
+cd cyber-assessment-reviewer
+./setup.sh
+```
+
+#### 🪟 Windows
+```batch
+git clone <repository-url>
+cd cyber-assessment-reviewer
+setup.bat
+```
+
+#### 🐍 Cross-Platform (Python)
+```bash
+git clone <repository-url>
+cd cyber-assessment-reviewer
+python setup.py
+```
+
+### Running the Application
+
+#### 🐧 Linux/macOS
+```bash
+./run.sh
+```
+
+#### 🪟 Windows
+```batch
+run.bat
+```
+
+#### 🐍 Cross-Platform (Python)
+```bash
+python run.py
+```
+
+The application will be available at: **http://localhost:5000**
+
+## 🔧 What the Setup Does
+
+The setup script automatically:
+1. ✅ Checks Python version compatibility (3.10+)
+2. ✅ Installs `uv` (ultra-fast Python package manager)
+3. ✅ Creates an isolated virtual environment
+4. ✅ Installs all required dependencies
+5. ✅ Verifies the installation
+6. ✅ Provides next steps
+
+**Total setup time: ~2-3 minutes** (depending on internet speed)
+
+## 🔍 Troubleshooting
+
+### Common Issues & Solutions
+
+#### "Python not found" or "Python version too old"
+- **Solution**: Install Python 3.10+ from [python.org](https://python.org)
+- **Windows**: Make sure to check "Add Python to PATH" during installation
+- **Linux**: `sudo apt-get install python3 python3-pip` (Ubuntu/Debian)
+- **macOS**: `brew install python3` (with Homebrew)
+
+#### "uv installation failed"
+- **Solution**: Install uv manually:
+  - **Windows**: `powershell -c "irm https://astral.sh/uv/install.ps1 | iex"`
+  - **Linux/macOS**: `curl -LsSf https://astral.sh/uv/install.sh | sh`
+
+#### "Virtual environment creation failed"
+- **Solution**: Clear any existing `.venv` folder and run setup again:
+  ```bash
+  rm -rf .venv  # Linux/macOS
+  rmdir /s .venv  # Windows
+  ```
+
+#### "Dependencies installation failed"
+- **Solution**: The setup script automatically falls back to pip if uv fails
+- **Manual fallback**: Activate the virtual environment and install manually:
+  ```bash
+  source .venv/bin/activate  # Linux/macOS
+  .venv\Scripts\activate.bat  # Windows
+  pip install -e .
+  ```
+
+#### "Application won't start"
+- **Solution**: Check that you're in the correct directory and virtual environment exists
+- **Port conflict**: If port 5000 is in use, the app will show an error
+- **Permissions**: Make sure scripts are executable (`chmod +x *.sh` on Linux/macOS)
+
+### Performance Tips
+
+- **Install Ollama**: For faster AI responses, install [Ollama](https://ollama.com) and run:
+  ```bash
+  ollama pull mistral:7b
+  ```
+- **First run**: The first run downloads AI models (~13GB) - this is normal
+- **Memory**: Ensure you have at least 8GB RAM for optimal performance
 
 ## 📁 Project Structure
 
 ```
 cyber-assessment-reviewer/
-├── app.py                 # Main application entry point
-├── config.py             # Configuration management
-├── models.py             # Data models and classes
-├── utils.py              # Utility functions and helpers
-├── file_processors.py    # File processing logic
-├── ai_backend.py         # AI/LLM backend management
-├── routes.py             # Flask routes and web logic
-├── templates.py          # HTML template generation
-├── requirements.txt      # Full dependencies
-├── requirements-core.txt # Core dependencies only
-└── README.md            # This file
+├── app.py                    # Main application entry point
+├── config.py                # Configuration management
+├── models.py                # Data models and classes
+├── utils.py                 # Utility functions and helpers
+├── file_processors.py       # File processing logic
+├── ai_backend.py            # AI/LLM backend management
+├── routes.py                # Flask routes and web logic
+├── templates.py             # HTML template generation
+├── accuracy_engine.py       # Enhanced accuracy calculation system
+├── evidence_analyzer.py     # Advanced evidence review system
+├── findings_generator.py    # Technical findings generation
+├── risk_engine.py           # Dynamic risk assessment engine
+├── ai_validation.py         # AI response validation
+├── analysis_workflow.py     # Optimized analysis workflow
+├── docs/                    # Documentation
+│   └── markdown/           # Organized documentation files
+├── pyproject.toml          # Modern Python dependencies
+├── setup.py                # Cross-platform setup script
+├── setup.sh                # Linux/macOS setup script
+├── setup.bat               # Windows setup script
+├── run.py                  # Cross-platform run script
+├── run.sh                  # Linux/macOS run script
+├── run.bat                 # Windows run script
+└── README.md               # This file
 ```
+
+## 🔧 Enhanced System Components
+
+### Accuracy Engine
+- **Multi-dimensional scoring**: Compliance, risk assessment, finding quality, evidence utilization
+- **Framework-specific baselines**: NIST, ISO 27001, SOC 2, CIS Controls, PCI DSS
+- **Confidence-weighted accuracy**: Adjusts accuracy based on assessment confidence
+- **Improvement tracking**: Monitors accuracy trends over time
+
+### Evidence Analyzer
+- **Quality scoring**: Completeness, relevance, freshness, technical depth, credibility
+- **Evidence classification**: Policy documents, configurations, audit logs, procedures
+- **Gap detection**: Identifies missing or insufficient evidence
+- **Contradiction analysis**: Detects conflicting evidence statements
+
+### Findings Generator
+- **Technical specificity**: Detailed technical findings with actionable insights
+- **Severity classification**: Critical, High, Medium, Low, Informational
+- **Correlation analysis**: Identifies relationships between findings
+- **Remediation prioritization**: Effort estimates and priority rankings
+
+### Risk Engine
+- **Dynamic scoring**: Contextual factors, temporal analysis, threat landscape
+- **Quantitative metrics**: Value at Risk, Expected Loss, Risk Exposure
+- **Interdependency analysis**: Risk relationships between controls
+- **Treatment recommendations**: Mitigate, Transfer, Avoid, Accept strategies
+
+## 📚 Documentation
+
+Comprehensive documentation is available in the `docs/markdown/` folder:
+
+- **[Installation Guide](./docs/markdown/INSTALLATION_GUIDE.md)** - Complete setup instructions
+- **[Docker Setup](./docs/markdown/DOCKER_SETUP.md)** - Container deployment
+- **[AI Optimization](./docs/markdown/AI_OPTIMIZATION_GUIDE.md)** - Performance tuning
+- **[Full Documentation Index](./docs/markdown/README.md)** - Complete documentation catalog
 
 ## 🛠️ Installation
 

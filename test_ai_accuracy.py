@@ -15,6 +15,10 @@ from ai_backend import CyberAssessmentReviewer
 from analysis_workflow import OptimizedAnalysisWorkflow
 from cybersecurity_knowledge import CybersecurityKnowledgeBase
 from config import Config
+from accuracy_engine import EnhancedAccuracyEngine, AccuracyMetrics
+from evidence_analyzer import AdvancedEvidenceAnalyzer
+from findings_generator import EnhancedFindingsGenerator
+from risk_engine import AdvancedRiskEngine
 
 logger = logging.getLogger(__name__)
 
@@ -65,6 +69,16 @@ class TestResult:
     findings_quality: float
     issues: List[str]
     ai_result: AssessmentResult
+    # Enhanced metrics
+    accuracy_metrics: AccuracyMetrics = None
+    evidence_quality_score: float = 0.0
+    technical_specificity_score: float = 0.0
+    risk_assessment_score: float = 0.0
+    enhanced_findings: List[dict] = None
+    
+    def __post_init__(self):
+        if self.enhanced_findings is None:
+            self.enhanced_findings = []
 
 class AIAccuracyTester:
     """Framework for testing AI accuracy improvements"""
@@ -74,6 +88,11 @@ class AIAccuracyTester:
         self.reviewer = CyberAssessmentReviewer(self.config)
         self.workflow = OptimizedAnalysisWorkflow(self.reviewer)
         self.knowledge_base = CybersecurityKnowledgeBase()
+        # Enhanced components
+        self.accuracy_engine = EnhancedAccuracyEngine(self.config)
+        self.evidence_analyzer = AdvancedEvidenceAnalyzer(self.config)
+        self.findings_generator = EnhancedFindingsGenerator(self.config)
+        self.risk_engine = AdvancedRiskEngine(self.config)
         
     def run_accuracy_tests(self, test_cases: List[TestCase]) -> Dict[str, any]:
         """Run comprehensive accuracy tests"""
@@ -142,21 +161,48 @@ class AIAccuracyTester:
                 compliance_match, risk_level_match, findings_quality
             )
             
+            # Enhanced accuracy calculation
+            enhanced_accuracy_score, accuracy_metrics = self._calculate_enhanced_accuracy(
+                test_case, ai_result, evidence_texts
+            )
+            
+            # Calculate evidence quality score
+            evidence_quality_score = self._calculate_evidence_quality_score(
+                test_case, evidence_texts
+            )
+            
+            # Calculate technical specificity score
+            technical_specificity_score = self._calculate_technical_specificity_score(ai_result)
+            
+            # Calculate risk assessment score
+            risk_assessment_score = self._calculate_risk_assessment_score(test_case, ai_result)
+            
+            # Generate enhanced findings
+            enhanced_findings = self._generate_enhanced_findings(test_case, ai_result, evidence_quality_score)
+            
             # Identify issues
             issues = self._identify_test_issues(test_case, ai_result)
             
-            # Determine if test passed
-            passed = accuracy_score >= 0.7 and len(issues) == 0
+            # Determine if test passed (enhanced criteria)
+            passed = self._determine_test_passed(
+                enhanced_accuracy_score, accuracy_metrics, evidence_quality_score, 
+                technical_specificity_score, issues
+            )
             
             return TestResult(
                 test_id=test_case.test_id,
                 passed=passed,
-                accuracy_score=accuracy_score,
+                accuracy_score=enhanced_accuracy_score,
                 compliance_match=compliance_match,
                 risk_level_match=risk_level_match,
                 findings_quality=findings_quality,
                 issues=issues,
-                ai_result=ai_result
+                ai_result=ai_result,
+                accuracy_metrics=accuracy_metrics,
+                evidence_quality_score=evidence_quality_score,
+                technical_specificity_score=technical_specificity_score,
+                risk_assessment_score=risk_assessment_score,
+                enhanced_findings=enhanced_findings
             )
             
         except Exception as e:
@@ -295,6 +341,179 @@ Test {result.test_id}: {status}
                 report += f"- Issues: {'; '.join(result.issues)}\n"
         
         return report
+
+    # Enhanced calculation methods
+    def _calculate_enhanced_accuracy(self, test_case: TestCase, ai_result: AssessmentResult, 
+                                   evidence_texts: Dict[str, Dict[str, str]]) -> Tuple[float, AccuracyMetrics]:
+        """Calculate enhanced accuracy using the accuracy engine"""
+        try:
+            # Create expected result for comparison
+            expected_results = [{
+                'expected_compliance': test_case.expected_compliance,
+                'expected_risk_level': test_case.expected_risk_level,
+                'expected_findings': test_case.expected_findings
+            }]
+            
+            # Calculate evidence quality scores
+            evidence_quality_scores = {}
+            for filename, sections in evidence_texts.items():
+                evidence_quality_scores[filename] = self._calculate_file_evidence_quality(
+                    test_case.control, sections
+                )
+            
+            # Calculate enhanced accuracy metrics
+            accuracy_metrics = self.accuracy_engine.calculate_enhanced_accuracy(
+                [ai_result], expected_results, test_case.framework, evidence_quality_scores
+            )
+            
+            return accuracy_metrics.overall_accuracy, accuracy_metrics
+            
+        except Exception as e:
+            logger.warning(f"Enhanced accuracy calculation failed: {e}")
+            return 0.5, None
+    
+    def _calculate_evidence_quality_score(self, test_case: TestCase, 
+                                        evidence_texts: Dict[str, Dict[str, str]]) -> float:
+        """Calculate evidence quality score"""
+        try:
+            # Analyze evidence quality
+            evidence_metrics = self.evidence_analyzer.analyze_evidence_quality(
+                test_case.control, evidence_texts
+            )
+            return evidence_metrics.overall_quality_score
+        except Exception as e:
+            logger.warning(f"Evidence quality calculation failed: {e}")
+            return 0.5
+    
+    def _calculate_technical_specificity_score(self, ai_result: AssessmentResult) -> float:
+        """Calculate technical specificity score"""
+        if not ai_result.technical_details:
+            return 0.2
+        
+        # Score based on technical details presence and quality
+        technical_score = 0.0
+        
+        # Base score for having technical details
+        technical_score += 0.3
+        
+        # Score based on number of technical details
+        technical_score += min(0.4, len(ai_result.technical_details) * 0.1)
+        
+        # Score based on technical term density
+        technical_terms = [
+            'configuration', 'implementation', 'protocol', 'algorithm', 'encryption',
+            'authentication', 'authorization', 'monitoring', 'logging', 'compliance'
+        ]
+        
+        all_technical_text = ' '.join(ai_result.technical_details).lower()
+        term_count = sum(1 for term in technical_terms if term in all_technical_text)
+        technical_score += min(0.3, term_count * 0.05)
+        
+        return min(1.0, technical_score)
+    
+    def _calculate_risk_assessment_score(self, test_case: TestCase, ai_result: AssessmentResult) -> float:
+        """Calculate risk assessment score"""
+        try:
+            # Use risk engine to analyze risk assessment quality
+            risk_profile = self.risk_engine.calculate_dynamic_risk(
+                test_case.control, ai_result
+            )
+            
+            # Score based on risk profile quality
+            risk_score = 0.5
+            
+            # Adjust based on risk trajectory
+            if risk_profile.risk_trajectory == 'stable':
+                risk_score += 0.2
+            elif risk_profile.risk_trajectory == 'increasing':
+                risk_score += 0.1
+            
+            # Adjust based on baseline vs adjusted risk alignment
+            if abs(risk_profile.baseline_risk - risk_profile.adjusted_risk) < 0.3:
+                risk_score += 0.3
+            
+            return min(1.0, risk_score)
+            
+        except Exception as e:
+            logger.warning(f"Risk assessment calculation failed: {e}")
+            return 0.5
+    
+    def _generate_enhanced_findings(self, test_case: TestCase, ai_result: AssessmentResult,
+                                  evidence_quality_score: float) -> List[dict]:
+        """Generate enhanced findings for testing"""
+        try:
+            # Generate enhanced findings
+            enhanced_findings = self.findings_generator.generate_enhanced_findings(
+                test_case.control, ai_result, evidence_quality_score, test_case.framework
+            )
+            
+            # Convert to dictionary format
+            return [finding.to_dict() for finding in enhanced_findings]
+            
+        except Exception as e:
+            logger.warning(f"Enhanced findings generation failed: {e}")
+            return []
+    
+    def _determine_test_passed(self, accuracy_score: float, accuracy_metrics: AccuracyMetrics,
+                             evidence_quality_score: float, technical_specificity_score: float,
+                             issues: List[str]) -> bool:
+        """Determine if test passed using enhanced criteria"""
+        
+        # Base criteria
+        base_passed = accuracy_score >= 0.7 and len(issues) == 0
+        
+        # Enhanced criteria
+        evidence_passed = evidence_quality_score >= 0.4
+        technical_passed = technical_specificity_score >= 0.3
+        
+        # Multi-dimensional accuracy criteria
+        multidimensional_passed = True
+        if accuracy_metrics:
+            # Check key accuracy dimensions
+            key_dimensions = ['compliance_accuracy', 'risk_assessment_accuracy', 'finding_quality']
+            for dimension in key_dimensions:
+                if dimension in accuracy_metrics.dimension_scores:
+                    if accuracy_metrics.dimension_scores[dimension] < 0.5:
+                        multidimensional_passed = False
+                        break
+        
+        # Overall pass determination
+        return base_passed and evidence_passed and technical_passed and multidimensional_passed
+    
+    def _calculate_file_evidence_quality(self, control: ControlData, sections: Dict[str, str]) -> float:
+        """Calculate evidence quality score for a file"""
+        if not sections:
+            return 0.0
+        
+        # Simple quality assessment based on content
+        total_score = 0.0
+        section_count = 0
+        
+        for section_name, content in sections.items():
+            if "Error" in section_name or not content:
+                continue
+            
+            section_score = 0.5  # Base score
+            
+            # Check for quality indicators
+            content_lower = content.lower()
+            quality_indicators = [
+                'implemented', 'configured', 'documented', 'tested', 'verified',
+                'compliant', 'established', 'maintained', 'monitored', 'audited'
+            ]
+            
+            for indicator in quality_indicators:
+                if indicator in content_lower:
+                    section_score += 0.1
+            
+            # Length bonus
+            if len(content) > 100:
+                section_score += 0.2
+            
+            total_score += min(1.0, section_score)
+            section_count += 1
+        
+        return total_score / section_count if section_count > 0 else 0.0
 
 def create_sample_test_cases() -> List[TestCase]:
     """Create sample test cases for validation"""

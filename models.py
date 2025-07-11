@@ -50,6 +50,13 @@ class AssessmentResult:
     technical_details: List[str] = None
     compliance_rationale: str = ""
     evidence_gaps: List[str] = None
+    # New enhanced metrics fields
+    accuracy_dimensions: Dict[str, float] = None
+    evidence_quality_score: float = 0.0
+    technical_specificity_score: float = 0.0
+    risk_assessment_score: float = 0.0
+    finding_severity_distribution: Dict[str, int] = None
+    enhanced_findings: List[Dict[str, Any]] = None
 
     def __post_init__(self):
         """Initialize optional fields if not provided"""
@@ -57,6 +64,12 @@ class AssessmentResult:
             self.technical_details = []
         if self.evidence_gaps is None:
             self.evidence_gaps = []
+        if self.accuracy_dimensions is None:
+            self.accuracy_dimensions = {}
+        if self.finding_severity_distribution is None:
+            self.finding_severity_distribution = {}
+        if self.enhanced_findings is None:
+            self.enhanced_findings = []
     
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary for JSON serialization"""
@@ -131,6 +144,18 @@ class RiskMetrics:
     compliance_percentage: float
     high_priority_controls: List[Dict[str, Any]]
     total_controls_assessed: int
+    # Enhanced risk metrics
+    dynamic_risk_score: float = 0.0
+    risk_interdependencies: int = 0
+    risk_velocity_average: float = 0.0
+    expected_loss_total: float = 0.0
+    value_at_risk_total: float = 0.0
+    risk_treatment_recommendations: List[str] = None
+    
+    def __post_init__(self):
+        """Initialize optional fields if not provided"""
+        if self.risk_treatment_recommendations is None:
+            self.risk_treatment_recommendations = []
     
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary"""

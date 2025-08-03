@@ -4,24 +4,45 @@ This guide provides comprehensive installation instructions for the Cyber Assess
 
 ## 📋 Prerequisites
 
-- **Python 3.10 or higher**
+- **Python 3.10.11** (preferred) or **Python 3.10+**
 - **Git** (for cloning the repository)
-- **Anaconda/Miniconda** (recommended) or **pip** with virtual environment support
+- **Internet connection** (for downloading uv and dependencies)
+- **uv** (automatically installed by setup scripts) or **Anaconda/Miniconda** (alternative)
 
 ## 🚀 Quick Start
 
-### Option 1: Automated Setup (Recommended)
+### Option 1: Enhanced Setup Scripts (Recommended)
 
+#### Linux/macOS with uv
 ```bash
 # Clone the repository
 git clone https://github.com/Kr4t0S-X/Cyber-Assessment-Reviewer.git
 cd Cyber-Assessment-Reviewer
 
-# Run automated setup
-python setup_environment.py
+# Run enhanced setup (installs uv + Python 3.10.11 + dependencies)
+./setup.sh
+
+# Or use the advanced installation script
+./install.sh
 ```
 
-### Option 2: Platform-Specific Scripts
+#### Windows with uv
+```powershell
+# Clone the repository
+git clone https://github.com/Kr4t0S-X/Cyber-Assessment-Reviewer.git
+cd Cyber-Assessment-Reviewer
+
+# Run PowerShell installation script
+.\install.ps1
+```
+
+#### Cross-Platform Python Setup
+```bash
+# Alternative: Python-based setup
+python setup.py
+```
+
+### Option 2: Platform-Specific Scripts (Legacy)
 
 #### Windows (Conda)
 ```cmd
@@ -33,7 +54,73 @@ setup-conda.bat
 ./setup-conda.sh
 ```
 
-## 🐍 Anaconda/Miniconda Installation (Recommended)
+## ⚡ uv-Based Installation (Recommended)
+
+### Why Use uv?
+
+- **10x faster** dependency resolution compared to pip
+- **Better conflict resolution** for complex ML/AI dependencies
+- **Cross-platform consistency** with locked versions
+- **Lightweight and fast** installation process
+- **Automatic virtual environment management**
+
+### Features of Enhanced Setup Scripts
+
+#### setup.sh / setup.py / install.sh / install.ps1
+
+- **Python 3.10.11 target version** with fallback support
+- **Automatic uv installation** and version checking
+- **Smart virtual environment detection** and validation
+- **Corrupted environment recovery** - automatically recreates broken environments
+- **Multiple dependency file support** (pyproject.toml priority, requirements.txt fallback)
+- **Cross-platform compatibility** (Linux, macOS, Windows)
+- **Comprehensive error handling** and helpful error messages
+- **Installation verification** with package version reporting
+
+### Installation Process
+
+1. **uv Installation**: Automatically downloads and installs uv package manager
+2. **Version Validation**: Ensures uv >= 0.4.0 for optimal performance
+3. **Virtual Environment**: Creates `.venv` with Python 3.10.11 (or best available)
+4. **Environment Health Check**: Validates existing environments, recreates if corrupted
+5. **Dependency Installation**: Uses pyproject.toml (preferred) or requirements.txt
+6. **Verification**: Tests core package imports and displays versions
+7. **Setup Completion**: Provides clear next steps and activation instructions
+
+### Usage Examples
+
+#### Basic Installation
+```bash
+# Linux/macOS
+./setup.sh
+
+# Windows
+.\install.ps1
+```
+
+#### Advanced Installation with Custom Settings
+```bash
+# Custom virtual environment directory
+VENV_DIR="my-env" ./install.sh
+
+# Specific Python version (if available)
+PYTHON_VERSION="3.10.9" ./install.sh
+
+# Help and options
+./install.sh --help
+.\install.ps1 -Help
+```
+
+#### Manual Activation After Installation
+```bash
+# Linux/macOS
+source .venv/bin/activate
+
+# Windows
+.venv\Scripts\activate
+```
+
+## 🐍 Anaconda/Miniconda Installation (Alternative)
 
 ### Why Use Conda?
 
@@ -286,15 +373,54 @@ python setup_environment.py
 
 ## 📊 Performance Comparison
 
-| Method | Setup Time | Disk Space | Dependency Resolution | Isolation |
-|--------|------------|------------|---------------------|-----------|
-| **Conda** | 5-10 min | ~2GB | Excellent | Excellent |
-| **Pip + venv** | 2-5 min | ~500MB | Good | Good |
-| **Global pip** | 1-2 min | ~200MB | Poor | None |
+| Method | Setup Time | Disk Space | Dependency Resolution | Isolation | Speed |
+|--------|------------|------------|---------------------|-----------|-------|
+| **uv + venv** | 1-3 min | ~300MB | Excellent | Excellent | 10x faster |
+| **Conda** | 5-10 min | ~2GB | Excellent | Excellent | Standard |
+| **Pip + venv** | 2-5 min | ~500MB | Good | Good | Standard |
+| **Global pip** | 1-2 min | ~200MB | Poor | None | Standard |
+
+### Setup Script Comparison
+
+| Script | Platform | Features | Best For |
+|--------|----------|----------|----------|
+| **setup.sh** | Linux/macOS | Enhanced uv integration, health checks | Production setup |
+| **install.sh** | Linux/macOS | Advanced error handling, color output | Development setup |
+| **install.ps1** | Windows | PowerShell native, full feature parity | Windows development |
+| **setup.py** | Cross-platform | Python-based, consistent behavior | CI/CD pipelines |
 
 ## 🎯 Recommended Workflows
 
-### For Development
+### For Development (Recommended)
+```bash
+# Use uv for fast, reliable development setup
+./install.sh  # Linux/macOS
+# or
+.\install.ps1  # Windows
+
+# Activate environment
+source .venv/bin/activate  # Linux/macOS
+# or
+.venv\Scripts\activate  # Windows
+```
+
+### For Production
+```bash
+# Use enhanced setup for production deployment
+./setup.sh  # Optimized for production use
+# or
+python setup.py  # For automated deployment scripts
+```
+
+### For CI/CD
+```bash
+# Use Python-based setup for consistency
+python setup.py
+source .venv/bin/activate
+python -m pytest  # Run tests
+```
+
+### For Conda Users (Alternative)
 ```bash
 # Use conda for better dependency management
 conda create -n cyber-assessment-dev python=3.10
@@ -302,25 +428,12 @@ conda activate cyber-assessment-dev
 conda install -c conda-forge --file requirements-dev.txt
 ```
 
-### For Production
-```bash
-# Use conda with locked versions
-conda env create -f environment-prod.yml
-conda activate cyber-assessment-prod
-```
-
-### For Testing
-```bash
-# Use pip for lightweight testing
-python -m venv test-env
-source test-env/bin/activate  # or test-env\Scripts\activate on Windows
-pip install -r requirements.txt
-```
-
 ## 📚 Additional Resources
 
-- **Conda Documentation**: [https://docs.conda.io/](https://docs.conda.io/)
+- **uv Documentation**: [https://github.com/astral-sh/uv](https://github.com/astral-sh/uv)
+- **Python 3.10.11 Downloads**: [https://www.python.org/downloads/release/python-31011/](https://www.python.org/downloads/release/python-31011/)
 - **Virtual Environments Guide**: [https://docs.python.org/3/tutorial/venv.html](https://docs.python.org/3/tutorial/venv.html)
+- **Conda Documentation**: [https://docs.conda.io/](https://docs.conda.io/)
 - **Package Management Best Practices**: [https://packaging.python.org/](https://packaging.python.org/)
 
 ## 🆘 Getting Help

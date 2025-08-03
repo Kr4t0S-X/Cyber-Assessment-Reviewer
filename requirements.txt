@@ -7,7 +7,7 @@ python-docx==1.1.0
 python-pptx==0.6.23
 werkzeug==3.0.1
 requests==2.31.0
-numpy==1.24.3
+numpy>=1.26.0,<2
 
 # Production WSGI Servers
 waitress==3.0.0
@@ -20,7 +20,7 @@ transformers==4.36.0
 accelerate==0.25.0
 sentencepiece==0.1.99
 bitsandbytes==0.41.3
-scipy==1.11.4
+scipy>=1.11.4
 safetensors==0.4.1
 
 # Development Dependencies (optional)

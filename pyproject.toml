@@ -26,7 +26,7 @@ dependencies = [
     
     # Data Processing
     "pandas>=2.1.4",
-    "numpy>=1.24.3",
+    "numpy>=1.26.0,<2",
     "openpyxl>=3.1.2",
     
     # Document Processing
@@ -73,6 +73,32 @@ cyber-assessment-reviewer = "app:main"
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["."]
+include = [
+    "*.py",
+    "adaptive_prompts/*.json",
+    "README.md",
+    "requirements*.txt"
+]
+exclude = [
+    "tests/",
+    "test_*.py",
+    "*.pyc",
+    "__pycache__/",
+    ".venv/",
+    "sessions/",
+    "analytics_data/",
+    "feedback_data/",
+    "improvement_cycles/",
+    "learning_reports/",
+    "previous versions/",
+    "docs/",
+    "Sample_Assessments/",
+    ".git/",
+    "*.log"
+]
 
 [tool.black]
 line-length = 100
